@@ -23,8 +23,7 @@ inline fun forceRun(block: () -> Unit) {
 	}
 }
 
-fun Any?.className(): String =
-		if (null != this) this.javaClass.name else "NullType"
+fun Any?.className(): String = if (null != this) this.javaClass.name else "NullType"
 
 @Suppress("UNCHECKED_CAST")
 inline fun <reified R> cast(any: Any?) =

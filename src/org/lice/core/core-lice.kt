@@ -15,7 +15,6 @@ import org.lice.compiler.util.InterpretException.Factory.numberOfArgumentNotMatc
 import org.lice.compiler.util.InterpretException.Factory.tooFewArgument
 import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
 import org.lice.compiler.util.cast
-import org.lice.lang.DefineResult
 
 fun SymbolList.addDefines() {
 	fun defFunc(name: String, params: ParamList, block: Mapper<Node>, body: Node) {
@@ -46,7 +45,7 @@ fun SymbolList.addDefines() {
 					.map { (it as? SymbolNode)?.name ?: notSymbol(meta) }
 			val override = isVariableDefined(name)
 			defFunc(name, params, block, body)
-			return@defineFunction ValueNode(DefineResult("${if (override) "overridden" else "defined"}: $name"))
+			return@defineFunction ValueNode("${if (override) "overridden" else "defined"}: $name")
 		}
 	}
 	definer("def") { node -> ValueNode(node.eval()) }

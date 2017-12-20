@@ -12,8 +12,6 @@ import org.lice.core.SymbolList
 import org.lice.repl.Main
 import java.io.File
 
-const val VERSION: String = "v3.1.1"
-
 object Lice {
 	@JvmOverloads
 	@JvmStatic

@@ -10,8 +10,6 @@ import kotlin.test.*
 
 infix fun String.evalTo(any: Any) = assertEquals(any, Lice.run(this))
 
-infix fun Any.shouldBe(any: Any) = assertEquals(any, this)
-
 fun String.shouldBeTrue() = assertTrue(true == Lice.run(this))
 fun String.shouldBeFalse() = assertTrue(true != Lice.run(this))
 fun String.shouldBeNull() = assertNull(Lice.run(this))

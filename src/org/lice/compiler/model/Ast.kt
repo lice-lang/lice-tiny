@@ -16,11 +16,7 @@ import org.lice.compiler.util.className
 import org.lice.core.Func
 import org.lice.core.SymbolList
 
-class MetaData(
-		val beginLine: Int = -1,
-		val beginColumn: Int = -1,
-		val endLine: Int = -1,
-		val endColumn: Int = -1) {
+class MetaData(val beginLine: Int = -1) {
 	val lineNumber: Int get() = beginLine
 
 	companion object Factory {
@@ -32,14 +28,9 @@ interface Node {
 	fun eval(): Any?
 	val meta: MetaData
 	override fun toString(): String
-
-	companion object Objects {
-		fun getNullNode(meta: MetaData) = EmptyNode(meta)
-	}
 }
 
 class ValueNode
-@JvmOverloads
 constructor(val value: Any?, override val meta: MetaData = EmptyMetaData) : Node {
 	override fun eval() = value
 	override fun toString() = "value: <$value> => ${value.className()}"

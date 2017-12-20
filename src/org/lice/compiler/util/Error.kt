@@ -43,9 +43,3 @@ class InterpretException(string: String) : RuntimeException(string) {
 	}
 }
 
-fun showError(string: String, exit: Boolean = false) {
-	if (exit)
-		throw RuntimeException(string)
-	else
-		Echoer.echolnErr(string)
-}

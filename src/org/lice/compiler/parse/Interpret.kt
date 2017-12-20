@@ -52,8 +52,7 @@ fun mapAst(
 		symbolList: SymbolList = SymbolList()): Node = when (node) {
 	is StringMiddleNode -> {
 		val fst = node.list.first()
-		val s = mapAst(fst, symbolList)
-		s as? ValueNode ?: ExpressionNode(node = s, meta = node.meta,
+		mapAst(fst, symbolList) as? ValueNode ?: ExpressionNode(node = mapAst(fst, symbolList), meta = node.meta,
 				params = node.list.drop(1).map { mapAst(it, symbolList) })
 	}
 	is StringLeafNode -> wrapValue(node, symbolList)

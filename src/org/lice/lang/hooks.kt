@@ -10,8 +10,6 @@
 
 package org.lice.lang
 
-import org.lice.compiler.model.Node
-
 typealias Output = Any?.() -> Unit
 
 object Echoer {
