@@ -33,5 +33,4 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       - run: gradle test
-      - run: java -jar build/libs/lice-tiny-1.0-all.jar example.lice
 
