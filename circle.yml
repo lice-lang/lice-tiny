@@ -1,18 +1,37 @@
-machine:
-  java:
-    version: oraclejdk8
+# Java Gradle CircleCI 2.0 configuration file
 #
-
-dependencies:
-  pre:
-    - chmod a+x gradlew
-  override:
-    - ./gradlew dependencies
+# Check https://circleci.com/docs/2.0/language-java/ for more details
 #
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
 
+    working_directory: ~/lice
 
-test:
-  override:
-    - ./gradlew check --info
-#
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run: gradle test
+      - run: java -jar build/libs/lice-tiny-1.0-all.jar example.lice
 

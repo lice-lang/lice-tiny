@@ -3,7 +3,8 @@ environment:
 #
 
 build_script:
-  - gradlew check --info
+  - gradlew build --info
+  - java -jar build/libs/lice-tiny-1.0-all.jar example.lice
 #
 
 artifacts:
