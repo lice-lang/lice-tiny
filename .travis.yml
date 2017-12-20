@@ -6,7 +6,7 @@ jdk:
 
 script:
 - "./gradlew build"
-- "java -jar build/libs/lice-tiny-1.0-all.jar example.lice"
+- "java -jar build/libs/lice-tiny-1.1-all.jar example.lice"
 
 before_install:
 - chmod a+x gradlew
