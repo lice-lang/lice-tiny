@@ -1,8 +1,6 @@
 package org.lice
 
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 /**
  * Created by ice1000 on 2017/5/1.

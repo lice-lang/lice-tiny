@@ -133,8 +133,6 @@ class StdTest {
 
 (print (format "ass %s can", "we") "
 ")
-
-(-> ls (list 1 2 3))
 """)
 				}
 			}

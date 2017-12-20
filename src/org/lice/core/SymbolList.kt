@@ -52,7 +52,7 @@ constructor(init: Boolean = true) {
 				else EmptyNode(meta)
 			}
 
-	fun defineVariable(name: String, node: Any?) = variables.put(name, node)
+	fun defineVariable(name: String, node: Node) = variables.put(name, node)
 	fun defineFunction(name: String, node: Func) = variables.put(name, node)
 	fun isVariableDefined(name: String): Boolean = variables.containsKey(name)
 	fun removeVariable(name: String) = variables.remove(name)

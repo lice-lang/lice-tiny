@@ -69,8 +69,9 @@ class SymbolNode(
 		val name: String,
 		override val meta: MetaData) : Node {
 	override fun eval() =
-			if (symbolList.isVariableDefined(name)) symbolList.getVariable(name)
-			else undefinedVariable(name, meta)
+			if (symbolList.isVariableDefined(name)) symbolList.getVariable(name).let {
+				if (it is Node) it.eval() else it
+			} else undefinedVariable(name, meta)
 
 	override fun toString() = "symbol: <$name>"
 }

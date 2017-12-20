@@ -6,14 +6,15 @@
 
 package org.lice.core
 
+import org.lice.compiler.model.ValueNode
 import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
 import org.lice.lang.NumberOperator
 import org.lice.lang.NumberOperator.Leveler.compare
 
 fun SymbolList.addLiterals() {
-	defineVariable("true", true)
-	defineVariable("false", false)
-	defineVariable("null", null)
+	defineVariable("true", ValueNode(true))
+	defineVariable("false", ValueNode(false))
+	defineVariable("null", ValueNode(null))
 }
 
 fun SymbolList.addNumberFunctions() {

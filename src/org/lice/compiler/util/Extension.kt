@@ -24,3 +24,6 @@ inline fun forceRun(block: () -> Unit) {
 }
 
 fun Any?.className() = if (null != this) this.javaClass.name else "NullType"
+
+@Suppress("UNCHECKED_CAST")
+fun <R> cast(any: Any?) = any as R

@@ -2,11 +2,10 @@ package org.lice.core
 
 import org.lice.compiler.model.*
 import org.lice.compiler.parse.*
+import org.lice.compiler.util.*
 import org.lice.compiler.util.InterpretException.Factory.notSymbol
 import org.lice.compiler.util.InterpretException.Factory.tooFewArgument
 import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
-import org.lice.compiler.util.className
-import org.lice.compiler.util.forceRun
 import org.lice.lang.Echoer
 import java.io.File
 
@@ -28,7 +27,7 @@ fun SymbolList.addGetSetFunction() {
 			tooFewArgument(2, ls.size, metaData)
 		val str = (ls.first() as SymbolNode).name
 		val v = ls[1]
-		defineVariable(str, v.eval())
+		defineVariable(str, ValueNode(v.eval()))
 		ls.first()
 	})
 	defineFunction("<->", { ln, ls ->
@@ -37,7 +36,7 @@ fun SymbolList.addGetSetFunction() {
 		val str = (ls.first() as SymbolNode).name
 		if (!isVariableDefined(str)) {
 			val node = ls[1].eval()
-			defineVariable(str, node)
+			defineVariable(str, ValueNode(node))
 		}
 		ls.first()
 	})
@@ -90,10 +89,14 @@ fun SymbolList.addStandard() {
 		ValueNode(null != removeVariable(a), metaData)
 	}
 	defineFunction("alias") { meta, ls ->
-		val a = getVariable((ls.first() as SymbolNode).name)
+		val a = getVariable(cast<SymbolNode>(ls.first()).name)
 		a?.let { function ->
 			ls.forEachIndexed { index, _ ->
-				if (index != 0) defineVariable((ls[index] as SymbolNode).name, function)
+				val name = cast<SymbolNode>(ls[index]).name
+				if (index != 0) when (function) {
+					is Node -> defineVariable(name, function)
+					else -> defineFunction(name, cast(function))
+				}
 			}
 		}
 		ValueNode(null != a, meta)
@@ -123,6 +126,9 @@ fun SymbolList.addStandard() {
 
 	provideFunctionWithMeta("load-file") { ln, ls ->
 		createRootNode(File(ls.first().toString()), this)
+	}
+	provideFunction("print") { ls ->
+		ls.forEach(Echoer::echo)
 	}
 
 	provideFunction("exit") { System.exit(0) }

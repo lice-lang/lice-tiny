@@ -19,14 +19,18 @@ import org.lice.lang.DefineResult
 fun SymbolList.addDefines() {
 	fun defFunc(name: String, params: ParamList, block: Mapper<Node>, body: Node) {
 		defineFunction(name) { meta, args ->
-			val backup = params.map { getVariable(it) }
+			val backup = params.map(this::getVariable)
 			if (args.size != params.size)
 				numberOfArgumentNotMatch(params.size, args.size, meta)
-			args.map(block).forEachIndexed { index, obj -> defineVariable(params[index], obj.eval()) }
+			args.map(block).forEachIndexed { index, obj -> defineVariable(params[index], obj) }
 			val ret = ValueNode(body.eval(), meta)
 			backup.forEachIndexed { index, node ->
-				if (node != null) defineVariable(params[index], node)
-				else removeVariable(params[index])
+				@Suppress("UNCHECKED_CAST")
+				when (node) {
+					is Node -> defineVariable(params[index], node)
+					null -> removeVariable(params[index])
+					else -> defineFunction(params[index], node as Func)
+				}
 			}
 			ret
 		}
