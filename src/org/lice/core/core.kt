@@ -28,21 +28,16 @@ fun SymbolList.addGetSetFunction() {
 			tooFewArgument(2, ls.size, metaData)
 		val str = (ls.first() as SymbolNode).name
 		val v = ls[1]
-		val res = when (v) {
-			is SymbolNode -> v
-			else -> ValueNode(v.eval(), metaData)
-		}
-		defineVariable(str, res)
-		res
+		defineVariable(str, v.eval())
+		ls.first()
 	})
 	defineFunction("<->", { ln, ls ->
 		if (ls.size < 2)
 			tooFewArgument(2, ls.size, ln)
 		val str = (ls.first() as SymbolNode).name
 		if (!isVariableDefined(str)) {
-			val node = ValueNode(ls[1].eval(), ln)
+			val node = ls[1].eval()
 			defineVariable(str, node)
-			return@defineFunction node
 		}
 		ls.first()
 	})

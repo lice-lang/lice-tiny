@@ -16,38 +16,31 @@ interface StringNode {
 }
 
 data class StringMiddleNode(
-	override val meta: MetaData,
-	val list: MutableList<StringNode> = mutableListOf()) : StringNode {
+		override val meta: MetaData,
+		val list: MutableList<StringNode> = mutableListOf()) : StringNode {
 
 	val empty: Boolean
 		get() = list.isEmpty()
 
 	override val strRepr: String
 		get() = list.fold(StringBuilder("{")) { stringBuilder, last ->
-			stringBuilder
-				.append(" [")
-				.append(last.strRepr)
-				.append("]")
-		}
-			.append(" }")
-			.toString()
+			stringBuilder.append(" [").append(last.strRepr).append("]")
+		}.append(" }").toString()
 
-	fun add(n: StringNode) {
-		list.add(n)
-	}
+	fun add(n: StringNode) = list.add(n)
 
 	override fun toString() = list.first().strRepr
 }
 
 data class StringLeafNode(
-	override val meta: MetaData,
-	val str: String) : StringNode {
+		override val meta: MetaData,
+		val str: String) : StringNode {
 	override val strRepr = str
 	override fun toString() = strRepr
 }
 
 data class EmptyStringNode(
-	override val meta: MetaData) : StringNode {
+		override val meta: MetaData) : StringNode {
 	override val strRepr = ""
 	override fun toString() = strRepr
 }

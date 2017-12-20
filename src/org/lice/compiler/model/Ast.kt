@@ -11,6 +11,7 @@ package org.lice.compiler.model
 
 import org.lice.compiler.model.MetaData.Factory.EmptyMetaData
 import org.lice.compiler.util.InterpretException.Factory.notFunction
+import org.lice.compiler.util.ParseException.Factory.undefinedVariable
 import org.lice.compiler.util.className
 import org.lice.core.Func
 import org.lice.core.SymbolList
@@ -67,7 +68,10 @@ class SymbolNode(
 		val symbolList: SymbolList,
 		val name: String,
 		override val meta: MetaData) : Node {
-	override fun eval() = symbolList.getVariable(name)
+	override fun eval() =
+			if (symbolList.isVariableDefined(name)) symbolList.getVariable(name)
+			else undefinedVariable(name, meta)
+
 	override fun toString() = "symbol: <$name>"
 }
 
