@@ -9,3 +9,11 @@ CodeShip|[ ![Codeship Status for lice-lang/lice-tiny](https://app.codeship.com/p
 
 [![JitPack](https://jitpack.io/v/lice-lang/lice-tiny.svg)](https://jitpack.io/#lice-lang/lice-tiny)<br/>
 [![license](https://img.shields.io/github/license/lice-lang/lice-tiny.svg)](https://github.com/lice-lang/lice-tiny)
+
+This is the tiny version of the Lice programming language.  
+Lice is very easy to learn -- especially this tiny version.
+
+Still, Lice provides full support for call-by-name, call-by-need, and call-by-value.
+In this version, you can only find the basic language constructs (the `def` family, `lambda` family, control flows, boolean and integer operations), list operations and File/GUI/Netword APIs are removed.
+
+I tried my best to make the compiled jar small.
