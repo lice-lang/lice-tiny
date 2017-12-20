@@ -23,7 +23,9 @@ inline fun forceRun(block: () -> Unit) {
 	}
 }
 
-fun Any?.className() = if (null != this) this.javaClass.name else "NullType"
+fun Any?.className(): String =
+		if (null != this) this.javaClass.name else "NullType"
 
 @Suppress("UNCHECKED_CAST")
-fun <R> cast(any: Any?) = any as R
+inline fun <reified R> cast(any: Any?) =
+		any as? R ?: throw InterpretException("$any is not ${R::class.java.name}")

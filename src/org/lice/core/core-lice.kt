@@ -14,6 +14,7 @@ import org.lice.compiler.util.InterpretException.Factory.notSymbol
 import org.lice.compiler.util.InterpretException.Factory.numberOfArgumentNotMatch
 import org.lice.compiler.util.InterpretException.Factory.tooFewArgument
 import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
+import org.lice.compiler.util.cast
 import org.lice.lang.DefineResult
 
 fun SymbolList.addDefines() {
@@ -29,7 +30,7 @@ fun SymbolList.addDefines() {
 				when (node) {
 					is Node -> defineVariable(params[index], node)
 					null -> removeVariable(params[index])
-					else -> defineFunction(params[index], node as Func)
+					else -> defineFunction(params[index], cast(node))
 				}
 			}
 			ret
@@ -39,7 +40,7 @@ fun SymbolList.addDefines() {
 	fun definer(funName: String, block: Mapper<Node>) {
 		defineFunction(funName) { meta, ls ->
 			if (ls.size < 2) tooFewArgument(2, ls.size, meta)
-			val name = (ls.first() as SymbolNode).name
+			val name = cast<SymbolNode>(ls.first()).name
 			val body = ls.last()
 			val params = ls.subList(1, ls.size - 1)
 					.map { (it as? SymbolNode)?.name ?: notSymbol(meta) }

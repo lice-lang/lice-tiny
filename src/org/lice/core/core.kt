@@ -25,7 +25,7 @@ fun SymbolList.addGetSetFunction() {
 	defineFunction("->", { metaData, ls ->
 		if (ls.size < 2)
 			tooFewArgument(2, ls.size, metaData)
-		val str = (ls.first() as SymbolNode).name
+		val str = cast<SymbolNode>(ls.first()).name
 		val v = ls[1]
 		defineVariable(str, ValueNode(v.eval()))
 		ls.first()
@@ -33,7 +33,7 @@ fun SymbolList.addGetSetFunction() {
 	defineFunction("<->", { ln, ls ->
 		if (ls.size < 2)
 			tooFewArgument(2, ls.size, ln)
-		val str = (ls.first() as SymbolNode).name
+		val str = cast<SymbolNode>(ls.first()).name
 		if (!isVariableDefined(str)) {
 			val node = ls[1].eval()
 			defineVariable(str, ValueNode(node))
@@ -102,7 +102,7 @@ fun SymbolList.addStandard() {
 		ValueNode(null != a, meta)
 	}
 
-	provideFunctionWithMeta("eval") { ln, ls ->
+	provideFunctionWithMeta("eval") { _, ls ->
 		val value = ls.first().toString()
 		mapAst(buildNode(value), symbolList = this).eval()
 	}
@@ -116,7 +116,6 @@ fun SymbolList.addStandard() {
 		ValueNode(ret)
 	}
 	provideFunction("type") { ls -> ls.first()?.javaClass ?: Nothing::class.java }
-	provideFunction("gc") { System.gc() }
 	provideFunction("|>") { it.last() }
 	defineFunction("force|>") { ln, ls ->
 		var ret: Any? = null
