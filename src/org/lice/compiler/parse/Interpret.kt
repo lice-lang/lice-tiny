@@ -13,6 +13,8 @@ import org.lice.compiler.model.*
 import org.lice.core.SymbolList
 import java.io.File
 
+fun String.isString() = first() == '\"' && last() == '\"'
+
 /**
  * This is the core implementation of mapAst
  *

@@ -56,8 +56,3 @@ object Echoer {
 	}
 }
 
-object BeforeEval {
-	var hook: Node.() -> Unit = { }
-
-	fun apply(node: Node) = hook(node)
-}
