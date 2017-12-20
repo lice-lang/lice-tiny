@@ -21,8 +21,6 @@ fun SymbolList.addLiterals() {
 fun SymbolList.addNumberFunctions() {
 	provideFunction("->double") { cast<Number>(it.first()).toDouble() }
 	provideFunction("->int") { cast<Number>(it.first()).toInt() }
-	provideFunction("->float") { cast<Number>(it.first()).toFloat() }
-	provideFunction("->long") { cast<Number>(it.first()).toLong() }
 	provideFunctionWithMeta("+") { meta, list ->
 		list.fold(NumberOperator(0)) { sum, value ->
 			if (value is Number) sum.plus(value, meta)
@@ -98,7 +96,7 @@ fun SymbolList.addNumberFunctions() {
 	provideFunction("^") { paramList ->
 		paramList.map { cast<Number>(it).toInt() }.reduce { last, self -> last xor self }
 	}
-	provideFunction("~") { cast<Number>(it.first()).toInt().inv() }
+	provideFunction("~") { (it.first() as Number).toInt().inv() }
 }
 
 fun SymbolList.addBoolFunctions() {

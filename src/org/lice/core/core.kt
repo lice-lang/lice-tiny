@@ -131,7 +131,6 @@ fun SymbolList.addStandard() {
 	}
 
 	provideFunction("exit") { System.exit(0) }
-
 	defineFunction("str->sym") { ln, ls ->
 		val a = ls.first().eval()
 		when (a) {
@@ -139,7 +138,6 @@ fun SymbolList.addStandard() {
 			else -> typeMisMatch("String", a, ln)
 		}
 	}
-
 	defineFunction("sym->str", { ln, ls ->
 		val a = ls.first()
 		when (a) {

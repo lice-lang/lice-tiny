@@ -129,7 +129,6 @@ class StdTest {
 (-> ass 10)
 
 (str->sym "ass")
-(->chars (sym->str ass))
 
 (print (format "ass %s can", "we") "
 ")

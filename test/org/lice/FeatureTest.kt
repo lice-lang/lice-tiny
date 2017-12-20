@@ -452,15 +452,11 @@ side-effect
 
 	@Test
 	fun test34() {
-		"(->chars (sym->str ass))" evalTo "ass".toCharArray().toList()
-		"(split \"ass we can\" \" \")" evalTo "ass we can".split(" ")
 		"(format \"Hello, %s!\", 233)" evalTo "Hello, 233!"
 		"(int->hex 12)" evalTo "0x${12.toString(16)}"
 		"(int->oct 12)" evalTo "0${12.toString(8)}"
 		"(int->bin 12)" evalTo "0b${12.toString(2)}"
 		"(sqrt 16)" evalTo 4.0
 		"(cbrt 64)" evalTo 4.0
-		Lice.run("(sinh 1)")
-		Lice.run("(cosh 1)")
 	}
 }

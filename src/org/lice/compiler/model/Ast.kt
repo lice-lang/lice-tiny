@@ -11,12 +11,12 @@ package org.lice.compiler.model
 
 import org.lice.compiler.model.MetaData.Factory.EmptyMetaData
 import org.lice.compiler.util.InterpretException.Factory.notFunction
-import org.lice.compiler.util.ParseException.Factory.undefinedVariable
+import org.lice.compiler.util.InterpretException.Factory.undefinedVariable
 import org.lice.compiler.util.className
 import org.lice.core.Func
 import org.lice.core.SymbolList
 
-class MetaData(val beginLine: Int = -1) {
+class MetaData(private val beginLine: Int = -1) {
 	val lineNumber: Int get() = beginLine
 
 	companion object Factory {
@@ -30,35 +30,23 @@ interface Node {
 	override fun toString(): String
 }
 
-class ValueNode
-constructor(val value: Any?, override val meta: MetaData = EmptyMetaData) : Node {
+class ValueNode(private val value: Any?, override val meta: MetaData = EmptyMetaData) : Node {
 	override fun eval() = value
 	override fun toString() = "value: <$value> => ${value.className()}"
 }
 
-class LazyValueNode
-//@JvmOverloads
-constructor(
-		lambda: () -> Any?,
-		override val meta: MetaData = EmptyMetaData) : Node {
-	val value by lazy(lambda)
+class LazyValueNode(lambda: () -> Any?, override val meta: MetaData = EmptyMetaData) : Node {
+	private val value by lazy(lambda)
 	override fun eval() = value
 	override fun toString() = "lazy: <$value>"
 }
 
-class ExpressionNode(
-		val node: Node,
-		override val meta: MetaData,
-		val params: List<Node>) : Node {
-
+class ExpressionNode(private val node: Node, override val meta: MetaData, private val params: List<Node>) : Node {
 	override fun eval() = (node.eval() as? Func ?: notFunction(meta)).invoke(meta, params).eval()
 	override fun toString() = "function with ${params.size} params"
 }
 
-class SymbolNode(
-		val symbolList: SymbolList,
-		val name: String,
-		override val meta: MetaData) : Node {
+class SymbolNode(private val symbolList: SymbolList, val name: String, override val meta: MetaData) : Node {
 	override fun eval() =
 			if (symbolList.isVariableDefined(name)) symbolList.getVariable(name).let {
 				if (it is Node) it.eval() else it

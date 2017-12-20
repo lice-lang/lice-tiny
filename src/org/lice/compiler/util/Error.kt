@@ -11,21 +11,16 @@
 package org.lice.compiler.util
 
 import org.lice.compiler.model.MetaData
-import org.lice.lang.Echoer
 
-class ParseException(string: String) : RuntimeException(string) {
-	constructor(string: String, meta: MetaData) : this("$string\nat line: ${meta.lineNumber}")
-
-	companion object Factory {
-		fun undefinedVariable(name: String, meta: MetaData): Nothing
-				= throw ParseException("undefined variable: $name", meta)
-	}
-}
+class ParseException(string: String) : RuntimeException(string)
 
 class InterpretException(string: String) : RuntimeException(string) {
 	constructor(string: String, meta: MetaData) : this("$string\nat line: ${meta.lineNumber}")
 
 	companion object Factory {
+		fun undefinedVariable(name: String, meta: MetaData): Nothing
+				= throw InterpretException("undefined variable: $name", meta)
+
 		fun notSymbol(meta: MetaData): Nothing =
 				throw InterpretException("type mismatch: symbol expected.", meta)
 
