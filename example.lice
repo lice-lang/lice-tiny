@@ -1,0 +1,37 @@
+; defining functions
+(def check
+		 (if (def? println)
+				 (print "defined: println.
+")
+			 (print "undefined: println.
+")))
+
+; calling functions
+(check)
+
+(def println anything
+		 (print anything "
+"))
+
+(check)
+
+; plus
+(println (+ 1 1))
+
+(println (|| true false))
+
+; defining call-by-name functions
+(defexpr unless cond block (|>
+  (if (! cond) (block))))
+
+; calling that function
+(unless false (lambda (println "on! false")))
+
+; loops
+(def loop count block (|>
+		 (-> i 0)
+		 (while (< i count) (|> (block i)
+		 (-> i (+ i 1))))))
+
+(loop 20 (lambda i (println i)))
+

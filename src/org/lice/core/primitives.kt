@@ -122,9 +122,10 @@ fun SymbolList.addNumberFunctions() {
 	provideFunction("~") { (it.first() as Number).toInt().inv() }
 }
 
-inline fun SymbolList.addBoolFunctions() {
-	provideFunctionWithMeta("&&") { ln, ls -> ls.all { it.booleanValue() } }
-	provideFunctionWithMeta("||") { ln, ls -> ls.any { it.booleanValue() } }
+fun SymbolList.addBoolFunctions() {
+	provideFunction("&&") { ls -> ls.all { it.booleanValue() } }
+	provideFunction("||") { ls -> ls.any { it.booleanValue() } }
+	provideFunction("!") { ls -> !ls.first().booleanValue() }
 }
 
 
