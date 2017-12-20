@@ -29,6 +29,7 @@ constructor(init: Boolean = true) {
 	private fun initialize() {
 		addMathFunctions()
 		addStandard()
+		addDefines()
 		addGetSetFunction()
 		addControlFlowFunctions()
 		addNumberFunctions()

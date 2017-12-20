@@ -13,7 +13,6 @@ import org.lice.compiler.model.*
 import org.lice.core.SymbolList
 import java.io.File
 
-
 /**
  * This is the core implementation of mapAst
  *
@@ -24,18 +23,7 @@ fun parseValue(
 		str: String,
 		meta: MetaData): Node? = when {
 	str.isBlank() -> null
-	str.isString() -> ValueNode(str
-			.substring(
-					startIndex = 1,
-					endIndex = str.length - 1
-			)
-			.replace("\\r", "\r")
-			.replace("\\n", "\n")
-			.replace("\\t", "\t")
-			.replace("\\b", "\b")
-			.replace("\\\\", "\\")
-			.replace("\\\"", "\"")
-			.replace("\\\'", "\'"), meta)
+	str.isString() -> ValueNode(str.substring(startIndex = 1, endIndex = str.length - 1), meta)
 	str.isOctInt() -> ValueNode(str.toOctInt(), meta)
 	str.isInt() -> ValueNode(str.toInt(), meta)
 	str.isHexInt() -> ValueNode(str.toHexInt(), meta)
@@ -43,8 +31,7 @@ fun parseValue(
 	str.isBigInt() -> ValueNode(str.toBigInt(), meta)
 	str.isBigDec() -> ValueNode(str.toBigDec(), meta)
 	else -> try {
-		if (str.length < 0xF)
-			ValueNode(str.toFloat(), meta)
+		if (str.length < 0xF) ValueNode(str.toFloat(), meta)
 		else ValueNode(str.toDouble(), meta)
 	} catch (e: Throwable) {
 		null
@@ -64,29 +51,16 @@ fun mapAst(
 	is StringMiddleNode -> {
 		val fst = node.list.first()
 		val s = mapAst(fst, symbolList)
-		s as? ValueNode ?: ExpressionNode(
-				node = s,
-				meta = node.meta,
-				params = node.list.drop(1).map { mapAst(it, symbolList) }
-		)
+		s as? ValueNode ?: ExpressionNode(node = s, meta = node.meta,
+				params = node.list.drop(1).map { mapAst(it, symbolList) })
 	}
-	is StringLeafNode ->
-		wrapValue(node, symbolList)
-	else -> // empty
-		EmptyNode(node.meta)
+	is StringLeafNode -> wrapValue(node, symbolList)
+	else -> EmptyNode(node.meta)
 }
 
-fun wrapValue(
-		node: StringLeafNode,
-		symbolList: SymbolList
-): Node = parseValue(
-		str = node.str,
-		meta = node.meta
-) ?: SymbolNode(
-		symbolList = symbolList,
-		name = node.str,
-		meta = node.meta
-)
+fun wrapValue(node: StringLeafNode, symbolList: SymbolList): Node =
+		parseValue(str = node.str, meta = node.meta) ?:
+				SymbolNode(symbolList = symbolList, name = node.str, meta = node.meta)
 
 /**
  * create an executable node
@@ -95,17 +69,10 @@ fun wrapValue(
  * @param symbolList symbol list, with a default value
  * @return generated root node of the ast
  */
-fun createRootNode(
-		file: File,
-		symbolList: SymbolList = SymbolList(init = true)
-): Node {
+fun createRootNode(file: File, symbolList: SymbolList = SymbolList(init = true)): Node {
 	val code = file.readText()
 	val fp = "FILE_PATH"
-	if (symbolList.getVariable(fp)?.invoke(MetaData.EmptyMetaData, emptyList()) == null)
-		symbolList.defineVariable(fp, { _, _ -> ValueNode(any = file.absolutePath) })
+	symbolList.defineVariable(fp, ValueNode(file.absolutePath))
 	val stringTreeRoot = buildNode(code)
-	return mapAst(
-			node = stringTreeRoot,
-			symbolList = symbolList
-	)
+	return mapAst(node = stringTreeRoot, symbolList = symbolList)
 }

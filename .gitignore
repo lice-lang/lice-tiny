@@ -1,0 +1,35 @@
+
+## output ##
+
+out
+bin
+build
+*.class
+#*.jar
+*.war
+*.exe
+
+## config ##
+
+#.idea
+.gradle
+
+## unnecessary ##
+
+.gradle/
+# .gitignore
+
+## Android
+
+*.iml
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.idea/
+/classes/
+
+sample

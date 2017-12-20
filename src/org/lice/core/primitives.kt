@@ -11,9 +11,9 @@ import org.lice.lang.NumberOperator
 import org.lice.lang.NumberOperator.Leveler.compare
 
 fun SymbolList.addLiterals() {
-	provideFunction("true") { true }
-	provideFunction("false") { false }
-	provideFunction("null") { null }
+	defineVariable("true", true)
+	defineVariable("false", false)
+	defineVariable("null", null)
 }
 
 fun SymbolList.addNumberFunctions() {
