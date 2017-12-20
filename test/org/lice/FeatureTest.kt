@@ -278,20 +278,8 @@ lover
 	fun test19() {
 		"""
 (-> ice1k 233)
-
-(<-> ice1k 666)
 ice1k
 """ evalTo 233
-		"""
-(-> ice1k null)
-
-(<-> ice1k 666)
-ice1k
-""".shouldBeNull()
-		"""
-(<-> ice1k 666)
-ice1k
-""" evalTo 666
 	}
 
 	/**
@@ -457,6 +445,5 @@ side-effect
 		"(int->oct 12)" evalTo "0${12.toString(8)}"
 		"(int->bin 12)" evalTo "0b${12.toString(2)}"
 		"(sqrt 16)" evalTo 4.0
-		"(cbrt 64)" evalTo 4.0
 	}
 }

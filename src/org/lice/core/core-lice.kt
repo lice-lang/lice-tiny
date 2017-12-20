@@ -16,8 +16,11 @@ import org.lice.compiler.util.InterpretException.Factory.tooFewArgument
 import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
 import org.lice.compiler.util.cast
 
+private fun lambdaNameGen() = "\t${++lambdaNameCounter}"
+private var lambdaNameCounter = -100
+
 fun SymbolList.addDefines() {
-	fun defFunc(name: String, params: ParamList, block: Mapper<Node>, body: Node) {
+	fun defFunc(name: String, params: List<String>, block: (Node) -> Node, body: Node) {
 		defineFunction(name) { meta, args ->
 			val backup = params.map(this::getVariable)
 			if (args.size != params.size)
@@ -36,7 +39,7 @@ fun SymbolList.addDefines() {
 		}
 	}
 
-	fun definer(funName: String, block: Mapper<Node>) {
+	fun definer(funName: String, block: (Node) -> Node) {
 		defineFunction(funName) { meta, ls ->
 			if (ls.size < 2) tooFewArgument(2, ls.size, meta)
 			val name = cast<SymbolNode>(ls.first()).name
@@ -51,7 +54,7 @@ fun SymbolList.addDefines() {
 	definer("def") { node -> ValueNode(node.eval()) }
 	definer("deflazy") { node -> LazyValueNode({ node.eval() }) }
 	definer("defexpr") { it }
-	val lambdaDefiner = { funName: String, mapper: Mapper<Node> ->
+	fun lambdaDefiner(funName: String, mapper: (Node) -> Node) {
 		defineFunction(funName) { meta, ls ->
 			if (ls.isEmpty()) tooFewArgument(1, ls.size, meta)
 			val body = ls.last()

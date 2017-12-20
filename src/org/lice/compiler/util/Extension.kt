@@ -9,13 +9,6 @@
 
 package org.lice.compiler.util
 
-import org.lice.lang.Echoer
-
-fun <T> T.println(): T {
-	Echoer.echoln(this)
-	return this
-}
-
 inline fun forceRun(block: () -> Unit) {
 	try {
 		block()

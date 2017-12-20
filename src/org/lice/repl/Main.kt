@@ -14,7 +14,6 @@ object Main {
 	/**
 	 * interpret code in a file
 	 */
-	@JvmOverloads
 	fun interpret(file: File, symbolList: SymbolList = SymbolList()) = createRootNode(file, symbolList).eval()
 
 	@JvmStatic

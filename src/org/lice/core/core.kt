@@ -9,35 +9,14 @@ import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
 import org.lice.lang.Echoer
 import java.io.File
 
-@SinceKotlin("1.1")
-typealias ParamList = List<String>
-
-@SinceKotlin("1.1")
-typealias Mapper<T> = (T) -> T
-
-private var lambdaNameCounter = -100
-
-internal fun lambdaNameGen() = "\t${++lambdaNameCounter}"
-
 fun Any?.booleanValue() = this as? Boolean ?: (this != null)
 
 fun SymbolList.addGetSetFunction() {
 	defineFunction("->", { metaData, ls ->
-		if (ls.size < 2)
-			tooFewArgument(2, ls.size, metaData)
+		if (ls.size < 2) tooFewArgument(2, ls.size, metaData)
 		val str = cast<SymbolNode>(ls.first()).name
 		val v = ls[1]
 		defineVariable(str, ValueNode(v.eval()))
-		ls.first()
-	})
-	defineFunction("<->", { ln, ls ->
-		if (ls.size < 2)
-			tooFewArgument(2, ls.size, ln)
-		val str = cast<SymbolNode>(ls.first()).name
-		if (!isVariableDefined(str)) {
-			val node = ls[1].eval()
-			defineVariable(str, ValueNode(node))
-		}
 		ls.first()
 	})
 }
@@ -93,9 +72,9 @@ fun SymbolList.addStandard() {
 		a?.let { function ->
 			ls.forEachIndexed { index, _ ->
 				val name = cast<SymbolNode>(ls[index]).name
-				if (index != 0) when (function) {
-					is Node -> defineVariable(name, function)
-					else -> defineFunction(name, cast(function))
+				if (index != 0) {
+					if (function is Node) defineVariable(name, function)
+					else defineFunction(name, cast(function))
 				}
 			}
 		}
@@ -123,26 +102,20 @@ fun SymbolList.addStandard() {
 		ValueNode(ret, ln)
 	}
 
-	provideFunctionWithMeta("load-file") { ln, ls ->
+	provideFunctionWithMeta("load-file") { _, ls ->
 		createRootNode(File(ls.first().toString()), this)
 	}
-	provideFunction("print") { ls ->
-		ls.forEach(Echoer::echo)
-	}
+	provideFunction("print") { ls -> ls.forEach { Echoer.echo(it) } }
 
 	provideFunction("exit") { System.exit(0) }
 	defineFunction("str->sym") { ln, ls ->
 		val a = ls.first().eval()
-		when (a) {
-			is String -> SymbolNode(this, a, ln)
-			else -> typeMisMatch("String", a, ln)
-		}
+		if (a is String) SymbolNode(this, a, ln)
+		else typeMisMatch("String", a, ln)
 	}
-	defineFunction("sym->str", { ln, ls ->
+	defineFunction("sym->str") { ln, ls ->
 		val a = ls.first()
-		when (a) {
-			is SymbolNode -> ValueNode(a.name, ln)
-			else -> typeMisMatch("Symbol", a, ln)
-		}
-	})
+		if (a is SymbolNode) ValueNode(a.name, ln)
+		else typeMisMatch("Symbol", a, ln)
+	}
 }

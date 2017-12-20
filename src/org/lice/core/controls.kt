@@ -7,7 +7,6 @@ import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
 
 fun SymbolList.addMathFunctions() {
 	provideFunction("sqrt") { Math.sqrt((it.first() as Number).toDouble()) }
-	provideFunction("cbrt") { Math.cbrt((it.first() as Number).toDouble()) }
 	provideFunction("sin") { Math.sin((it.first() as Number).toDouble()) }
 	provideFunction("rand") { Math.random() }
 }

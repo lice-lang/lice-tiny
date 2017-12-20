@@ -21,7 +21,7 @@ typealias PlusLikeFunc = (Number, Number, MetaData) -> Number
 typealias MinusLikeFunc = (Number, Number, MetaData, Boolean) -> Number
 
 class NumberOperator(private var initial: Number) {
-	var level = getLevel(initial)
+	private var level = getLevel(initial)
 	val result: Number
 		get() = initial
 

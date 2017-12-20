@@ -4,8 +4,8 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.lice.compiler.parse.createRootNode
 import org.lice.compiler.util.forceRun
-import org.lice.compiler.util.println
 import org.lice.lang.Echoer
+import org.lice.lang.Echoer.echo
 import java.io.File
 
 /**
@@ -41,9 +41,7 @@ class StdTest {
 		Echoer.openOutput()
 		Echoer.repl = true
 		Echoer.echo("ass")
-		Echoer.echoln("ass")
-		Echoer.echoErr("ass")
-		Echoer.echolnErr("ass")
+		echo("${"ass"}\n")
 		Echoer.repl = false
 		Echoer.openOutput()
 	}
