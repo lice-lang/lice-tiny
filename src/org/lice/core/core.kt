@@ -102,7 +102,7 @@ fun SymbolList.addStandard() {
 		ValueNode(ret)
 	}
 	provideFunction("type") { ls -> ls.first()?.javaClass ?: Nothing::class.java }
-	provideFunction("|>") { it.last() }
+	provideFunction("|>") { it.lastOrNull() }
 	defineFunction("force|>") { ln, ls ->
 		var ret: Any? = null
 		forceRun { ls.forEach { node -> ret = node.eval() } }
