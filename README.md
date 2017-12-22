@@ -31,12 +31,13 @@ Code to run:
     (while (< i count) (|> (block i)
     (-> i (+ i 1))))))
 
+; invoking the function
 (loop 200000 (lambda i (|>
     (defexpr let x y block (|>
-        (-> x y)
+        (-> x y) ; this is actually an issue of lice.
         (block)
         (undef x)))
-    (let reimu 100 (lambda (|> reimu))))))
+    (let reimu 100 (lambda (|> x))))))
 
 (print "loop count: " i)
 ```
@@ -48,3 +49,26 @@ Lice call Java using Lice API|295ms
 Pure Java|13ms
 Pure Lice|897ms
 Java call Lice using Lice API|629ms
+
+## Lice invoking Java
+
+Lice has handy APIs for interacting with Java.
+
+```lisp
+; declare an extern function
+; must be a static Java function
+(extern "java.util.Objects" "equals")
+
+; calling the extern function
+(equals 1 1)
+```
+
+## Java invoking Lice
+
+This project provides handy APIs for running Lice codes from Java.
+
+```java
+System.out.println(Lice.run("(+ 1 1)")); // prints 2
+
+System.out.println(Lice.run(new File("example.lice"))); // run codes in a file
+```
