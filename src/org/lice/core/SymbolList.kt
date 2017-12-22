@@ -6,24 +6,26 @@
  */
 package org.lice.core
 
+import org.lice.lang.Echoer
 import org.lice.model.*
+import org.lice.util.className
 import java.util.function.Consumer
-
-@SinceKotlin("1.1")
-typealias Func = (MetaData, List<Node>) -> Node
-
-@SinceKotlin("1.1")
-typealias ProvidedFuncWithMeta = (MetaData, List<Any?>) -> Any?
-
-@SinceKotlin("1.1")
-typealias ProvidedFunc = (List<Any?>) -> Any?
 
 class SymbolList
 @JvmOverloads
 constructor(init: Boolean = true) {
-	val variables: MutableMap<String, Any?> = mutableMapOf()
+	val variables: MutableMap<String, Any?> = hashMapOf()
 
 	init {
+		defineFunction("") { _, ls ->
+			var ret: Any? = null
+			ls.forEach {
+				val res = it.eval()
+				ret = res
+				Echoer.replEcholn("${res.toString()} => ${res.className()}")
+			}
+			ValueNode(ret)
+		}
 		if (init) initialize()
 	}
 

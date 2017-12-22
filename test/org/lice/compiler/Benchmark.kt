@@ -5,6 +5,7 @@ import org.lice.Lice
 import org.lice.core.Func
 import org.lice.core.SymbolList
 import org.lice.model.MetaData
+import org.lice.model.ValueNode
 import org.lice.parse.buildNode
 import org.lice.parse.mapAst
 import org.lice.util.cast
@@ -22,6 +23,7 @@ class Benchmark {
 		reimu)))
 """
 
+		//language=TEXT
 		const val func = """
 (def codes-to-run (|>
 $core))
@@ -42,17 +44,22 @@ $core))
 
 		//language=TEXT
 		const val code2 = """
-(loop $cnt (lambda i (|> $core)))
+; loops
+(def loop count block (|>
+		 (-> i 0)
+		 (while (< i count) (|> (block i)
+		 (-> i (+ i 1))))))
+
+(loop $cnt (lambda i (code)))
 
 (print "loop count: " i)
 """
 	}
 
+	val map = hashMapOf<String, Any>()
 	val lice = mapAst(node = buildNode(code))
-	val lice2 = mapAst(node = buildNode(code), symbolList = SymbolList.with {
-		provideFunction("loop") { params ->
-			repeat(params[0] as Int) { cast<((Int) -> Any)>(params[1])(it) }
-		}
+	val lice2 = mapAst(node = buildNode(code2), symbolList = SymbolList.with {
+		provideFunction("code") { java(map) }
 	})
 
 	@Test
@@ -85,15 +92,19 @@ $core))
 			}
 		}
 		val map = mutableMapOf<String, Any>()
-		loop(cnt) { i ->
-			val let = { x: String, y: Any, block: (Map<String, Any>) -> Unit ->
-				map[x] = y
-				block(map)
-				map.remove(x)
-			}
-			let("reimu", 100) {
-				val local = 233 + it["reimu"] as Int
-			}
+		loop(cnt) { java(map) }
+	}
+
+
+
+	private fun java(map: MutableMap<String, Any>) {
+		val let = { x: String, y: Any, block: (Map<String, Any>) -> Unit ->
+			map[x] = y
+			block(map)
+			map.remove(x)
+		}
+		let("reimu", 100) {
+			val local = 233 + it["reimu"] as Int
 		}
 	}
 }

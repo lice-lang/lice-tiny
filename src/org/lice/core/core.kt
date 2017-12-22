@@ -3,10 +3,11 @@ package org.lice.core
 import org.lice.lang.Echoer
 import org.lice.model.*
 import org.lice.parse.*
-import org.lice.util.*
 import org.lice.util.InterpretException.Factory.notSymbol
 import org.lice.util.InterpretException.Factory.tooFewArgument
 import org.lice.util.InterpretException.Factory.typeMisMatch
+import org.lice.util.cast
+import org.lice.util.forceRun
 import java.io.File
 
 fun Any?.booleanValue() = this as? Boolean ?: (this != null)
@@ -92,15 +93,6 @@ fun SymbolList.addStandard() {
 		val value = ls.first().toString()
 		mapAst(buildNode(value), symbolList = this).eval()
 	}
-	defineFunction("") { _, ls ->
-		var ret: Any? = null
-		ls.forEach {
-			val res = it.eval()
-			ret = res
-			Echoer.replEcholn("${res.toString()} => ${res.className()}")
-		}
-		ValueNode(ret)
-	}
 	provideFunction("type") { ls -> ls.first()?.javaClass ?: Nothing::class.java }
 	provideFunction("|>") { it.lastOrNull() }
 	defineFunction("force|>") { ln, ls ->
@@ -115,11 +107,7 @@ fun SymbolList.addStandard() {
 	provideFunction("print") { ls -> ls.forEach { Echoer.echo(it) } }
 
 	provideFunction("exit") { System.exit(0) }
-	defineFunction("str->sym") { ln, ls ->
-		val a = ls.first().eval()
-		if (a is String) SymbolNode(this, a, ln)
-		else typeMisMatch("String", a, ln)
-	}
+	defineFunction("str->sym") { ln, ls -> SymbolNode(this, ls.first().eval().toString(), ln) }
 	defineFunction("sym->str") { ln, ls ->
 		val a = ls.first()
 		if (a is SymbolNode) ValueNode(a.name, ln)

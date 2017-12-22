@@ -68,6 +68,15 @@ fun SymbolList.addDefines() {
 	lambdaDefiner("lambda") { node -> ValueNode(node.eval()) }
 	lambdaDefiner("lazy") { node -> LazyValueNode({ node.eval() }) }
 	lambdaDefiner("expr") { it }
+
+	provideFunction("extern") { ls ->
+		val name = ls[1].toString()
+		val method = Class.forName(ls.first().toString()).declaredMethods.first { it.name == name }
+		provideFunction(name) {
+			method.invoke(null, it.toTypedArray())
+		}
+		name
+	}
 }
 
 
