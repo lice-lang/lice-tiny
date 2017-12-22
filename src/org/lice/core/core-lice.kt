@@ -9,12 +9,12 @@
 
 package org.lice.core
 
-import org.lice.compiler.model.*
-import org.lice.compiler.util.InterpretException.Factory.notSymbol
-import org.lice.compiler.util.InterpretException.Factory.numberOfArgumentNotMatch
-import org.lice.compiler.util.InterpretException.Factory.tooFewArgument
-import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
-import org.lice.compiler.util.cast
+import org.lice.model.*
+import org.lice.util.InterpretException.Factory.notSymbol
+import org.lice.util.InterpretException.Factory.numberOfArgumentNotMatch
+import org.lice.util.InterpretException.Factory.tooFewArgument
+import org.lice.util.InterpretException.Factory.typeMisMatch
+import org.lice.util.cast
 
 private fun lambdaNameGen() = "\t${++lambdaNameCounter}"
 private var lambdaNameCounter = -100

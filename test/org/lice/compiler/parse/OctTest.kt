@@ -3,6 +3,7 @@ package org.lice.compiler.parse
 import org.jetbrains.annotations.TestOnly
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.lice.parse.toOctInt
 
 /**
  * @author ice1000

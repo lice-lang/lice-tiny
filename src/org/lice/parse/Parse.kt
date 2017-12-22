@@ -8,10 +8,10 @@
 @file:JvmName("Parse")
 @file:JvmMultifileClass
 
-package org.lice.compiler.parse
+package org.lice.parse
 
-import org.lice.compiler.model.*
-import org.lice.compiler.util.ParseException
+import org.lice.model.*
+import org.lice.util.ParseException
 import java.util.*
 
 fun buildNode(originalCode: String): StringNode {

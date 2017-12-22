@@ -1,6 +1,6 @@
 package org.lice.repl
 
-import org.lice.compiler.parse.createRootNode
+import org.lice.parse.createRootNode
 import org.lice.core.SymbolList
 import org.lice.lang.Echoer
 import java.io.File

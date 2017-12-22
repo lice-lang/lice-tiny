@@ -6,7 +6,7 @@
  */
 package org.lice.core
 
-import org.lice.compiler.model.*
+import org.lice.model.*
 
 @SinceKotlin("1.1")
 typealias Func = (MetaData, List<Node>) -> Node

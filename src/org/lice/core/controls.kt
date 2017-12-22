@@ -1,9 +1,9 @@
 package org.lice.core
 
-import org.lice.compiler.parse.*
-import org.lice.compiler.util.InterpretException
-import org.lice.compiler.util.InterpretException.Factory.tooFewArgument
-import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
+import org.lice.parse.*
+import org.lice.util.InterpretException
+import org.lice.util.InterpretException.Factory.tooFewArgument
+import org.lice.util.InterpretException.Factory.typeMisMatch
 
 fun SymbolList.addMathFunctions() {
 	provideFunction("sqrt") { Math.sqrt((it.first() as Number).toDouble()) }

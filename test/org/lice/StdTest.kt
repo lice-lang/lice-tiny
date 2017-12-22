@@ -2,8 +2,8 @@ package org.lice
 
 import org.junit.BeforeClass
 import org.junit.Test
-import org.lice.compiler.parse.createRootNode
-import org.lice.compiler.util.forceRun
+import org.lice.parse.createRootNode
+import org.lice.util.forceRun
 import org.lice.lang.Echoer
 import org.lice.lang.Echoer.echo
 import java.io.File

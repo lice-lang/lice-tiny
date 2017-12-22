@@ -6,9 +6,9 @@
 
 package org.lice.core
 
-import org.lice.compiler.model.ValueNode
-import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
-import org.lice.compiler.util.cast
+import org.lice.model.ValueNode
+import org.lice.util.InterpretException.Factory.typeMisMatch
+import org.lice.util.cast
 import org.lice.lang.NumberOperator
 import org.lice.lang.NumberOperator.Leveler.compare
 

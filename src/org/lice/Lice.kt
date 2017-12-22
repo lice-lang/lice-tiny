@@ -6,8 +6,8 @@
  */
 package org.lice
 
-import org.lice.compiler.parse.buildNode
-import org.lice.compiler.parse.mapAst
+import org.lice.parse.buildNode
+import org.lice.parse.mapAst
 import org.lice.core.SymbolList
 import org.lice.repl.Main
 import java.io.File

@@ -7,10 +7,10 @@
 @file:JvmName("Parse")
 @file:JvmMultifileClass
 
-package org.lice.compiler.parse
+package org.lice.parse
 
-import org.lice.compiler.model.*
 import org.lice.core.SymbolList
+import org.lice.model.*
 import java.io.File
 
 fun String.isString() = first() == '\"' && last() == '\"'

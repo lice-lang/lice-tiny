@@ -8,9 +8,9 @@
 @file:JvmMultifileClass
 @file:Suppress("NOTHING_TO_INLINE")
 
-package org.lice.compiler.util
+package org.lice.util
 
-import org.lice.compiler.model.MetaData
+import org.lice.model.MetaData
 
 class ParseException(string: String) : RuntimeException(string)
 

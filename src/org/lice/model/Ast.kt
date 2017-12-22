@@ -7,14 +7,14 @@
 @file:JvmName("Model")
 @file:JvmMultifileClass
 
-package org.lice.compiler.model
+package org.lice.model
 
-import org.lice.compiler.model.MetaData.Factory.EmptyMetaData
-import org.lice.compiler.util.InterpretException.Factory.notFunction
-import org.lice.compiler.util.InterpretException.Factory.undefinedVariable
-import org.lice.compiler.util.className
 import org.lice.core.Func
 import org.lice.core.SymbolList
+import org.lice.model.MetaData.Factory.EmptyMetaData
+import org.lice.util.InterpretException.Factory.notFunction
+import org.lice.util.InterpretException.Factory.undefinedVariable
+import org.lice.util.className
 
 class MetaData(private val beginLine: Int = -1) {
 	val lineNumber: Int get() = beginLine

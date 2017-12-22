@@ -7,7 +7,7 @@
 @file:JvmName("Model")
 @file:JvmMultifileClass
 
-package org.lice.compiler.model
+package org.lice.model
 
 interface StringNode {
 	val strRepr: String

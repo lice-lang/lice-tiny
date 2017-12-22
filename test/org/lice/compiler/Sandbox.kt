@@ -16,7 +16,13 @@ class Sandbox {
 		fun main(args: Array<String>) {
 			//language=TEXT
 			Lice.run("""
+(defexpr let x y block (|>
+	(-> x y)
+	(block)
+	(undef x)))
 
+(let reimu 100 (lambda (|>
+  (print reimu))))
 """)
 		}
 	}

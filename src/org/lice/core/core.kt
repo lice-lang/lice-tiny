@@ -1,12 +1,12 @@
 package org.lice.core
 
-import org.lice.compiler.model.*
-import org.lice.compiler.parse.*
-import org.lice.compiler.util.*
-import org.lice.compiler.util.InterpretException.Factory.notSymbol
-import org.lice.compiler.util.InterpretException.Factory.tooFewArgument
-import org.lice.compiler.util.InterpretException.Factory.typeMisMatch
 import org.lice.lang.Echoer
+import org.lice.model.*
+import org.lice.parse.*
+import org.lice.util.*
+import org.lice.util.InterpretException.Factory.notSymbol
+import org.lice.util.InterpretException.Factory.tooFewArgument
+import org.lice.util.InterpretException.Factory.typeMisMatch
 import java.io.File
 
 fun Any?.booleanValue() = this as? Boolean ?: (this != null)

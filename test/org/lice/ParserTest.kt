@@ -2,10 +2,10 @@ package org.lice
 
 import org.jetbrains.annotations.TestOnly
 import org.junit.Test
-import org.lice.compiler.model.*
-import org.lice.compiler.parse.parseValue
-import org.lice.compiler.parse.wrapValue
 import org.lice.core.SymbolList
+import org.lice.model.*
+import org.lice.parse.parseValue
+import org.lice.parse.wrapValue
 import kotlin.test.*
 
 @TestOnly
