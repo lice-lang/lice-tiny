@@ -1,6 +1,6 @@
 package org.lice.compiler
 
-import org.junit.BeforeClass
+import org.junit.Test
 import org.lice.Lice
 
 /**
@@ -10,20 +10,9 @@ import org.lice.Lice
  */
 
 class Sandbox {
-	companion object {
-		@JvmStatic
-		@BeforeClass
-		fun main(args: Array<String>) {
-			//language=TEXT
-			Lice.run("""
-(defexpr let x y block (|>
-	(-> x y)
-	(block)
-	(undef x)))
-
-(let reimu 100 (lambda (|>
-  (print reimu))))
+	@Test
+	fun sandbox() {
+		Lice.run("""
 """)
-		}
 	}
 }

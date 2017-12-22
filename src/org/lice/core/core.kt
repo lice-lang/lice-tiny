@@ -14,7 +14,14 @@ fun Any?.booleanValue() = this as? Boolean ?: (this != null)
 fun SymbolList.addGetSetFunction() {
 	defineFunction("->", { metaData, ls ->
 		if (ls.size < 2) tooFewArgument(2, ls.size, metaData)
-		val str = cast<SymbolNode>(ls.first()).name
+		var str = cast<SymbolNode>(ls.first()).name
+		while (true) {
+			if (isVariableDefined(str)) {
+				val v = getVariable(str)
+				if (v is SymbolNode) str = v.name
+				else break
+			} else break
+		}
 		val v = ls[1]
 		defineVariable(str, ValueNode(v.eval()))
 		ls.first()

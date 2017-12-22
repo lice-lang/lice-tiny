@@ -7,6 +7,7 @@
 package org.lice.core
 
 import org.lice.model.*
+import java.util.function.Consumer
 
 @SinceKotlin("1.1")
 typealias Func = (MetaData, List<Node>) -> Node
@@ -57,4 +58,12 @@ constructor(init: Boolean = true) {
 	fun isVariableDefined(name: String): Boolean = variables.containsKey(name)
 	fun removeVariable(name: String) = variables.remove(name)
 	fun getVariable(name: String) = variables[name]
+
+	companion object {
+		@JvmStatic
+		fun with(init: Consumer<SymbolList>) = SymbolList().also { init.accept(it) }
+
+		@JvmStatic
+		fun with(init: SymbolList.() -> Unit) = SymbolList().also { init(it) }
+	}
 }

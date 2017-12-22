@@ -28,7 +28,6 @@ fun SymbolList.addDefines() {
 			args.map(block).forEachIndexed { index, obj -> defineVariable(params[index], obj) }
 			val ret = ValueNode(body.eval(), meta)
 			backup.forEachIndexed { index, node ->
-				@Suppress("UNCHECKED_CAST")
 				when (node) {
 					is Node -> defineVariable(params[index], node)
 					null -> removeVariable(params[index])

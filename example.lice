@@ -35,3 +35,11 @@
 
 (loop 20 (lambda i (println i)))
 
+; let
+(defexpr let x y block (|>
+		(-> x y)
+		(block)
+		(undef x)))
+
+(let reimu 100 (lambda (|>
+		(print reimu))))
