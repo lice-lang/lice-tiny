@@ -1,4 +1,4 @@
-package org.lice.compiler.parse
+package org.lice.parse
 
 import org.jetbrains.annotations.TestOnly
 import org.junit.Assert.assertEquals

@@ -2,10 +2,10 @@ package org.lice
 
 import org.junit.BeforeClass
 import org.junit.Test
-import org.lice.parse.createRootNode
-import org.lice.util.forceRun
 import org.lice.lang.Echoer
 import org.lice.lang.Echoer.echo
+import org.lice.parse.createRootNode
+import org.lice.util.forceRun
 import java.io.File
 
 /**
@@ -90,6 +90,18 @@ class StdTest {
 		}
 		if (ls.size % 2 == 0) println("Ah♂fuck you")
 		else println(ls.last())
+	}
+
+	@Test(timeout = 1000)
+	fun test7() {
+		"""
+(extern "java.util.Objects" "equals")
+(equals 1 1)
+""" evalTo true
+		"""
+(extern "java.util.Objects" "equals")
+(equals 1 2)
+""" evalTo false
 	}
 
 	companion object {

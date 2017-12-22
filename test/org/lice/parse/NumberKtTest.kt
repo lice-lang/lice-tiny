@@ -1,4 +1,4 @@
-package org.lice.compiler.parse
+package org.lice.parse
 
 import org.junit.Assert.*
 import org.junit.Test

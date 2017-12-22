@@ -1,7 +1,6 @@
-package org.lice.compiler
+package org.lice
 
 import org.junit.Test
-import org.lice.Lice
 
 /**
  * Created by ice1000 on 2017/4/23.

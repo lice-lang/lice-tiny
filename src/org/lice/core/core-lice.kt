@@ -15,6 +15,7 @@ import org.lice.util.InterpretException.Factory.numberOfArgumentNotMatch
 import org.lice.util.InterpretException.Factory.tooFewArgument
 import org.lice.util.InterpretException.Factory.typeMisMatch
 import org.lice.util.cast
+import java.lang.reflect.Modifier
 
 private fun lambdaNameGen() = "\t${++lambdaNameCounter}"
 private var lambdaNameCounter = -100
@@ -71,9 +72,12 @@ fun SymbolList.addDefines() {
 
 	provideFunction("extern") { ls ->
 		val name = ls[1].toString()
-		val method = Class.forName(ls.first().toString()).declaredMethods.first { it.name == name }
+		val clazz = ls.first().toString()
+		val method = Class.forName(clazz).declaredMethods
+				.firstOrNull { Modifier.isStatic(it.modifiers) && it.name == name }
+				?: throw UnsatisfiedLinkError("Method $name not found for class $clazz")
 		provideFunction(name) {
-			method.invoke(null, it.toTypedArray())
+			method.invoke(null, *it.toTypedArray())
 		}
 		name
 	}

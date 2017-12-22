@@ -1,17 +1,25 @@
-package org.lice.compiler
+package org.lice
 
 import org.junit.Test
-import org.lice.Lice
 import org.lice.core.Func
 import org.lice.core.SymbolList
 import org.lice.model.MetaData
-import org.lice.model.ValueNode
 import org.lice.parse.buildNode
 import org.lice.parse.mapAst
-import org.lice.util.cast
 
 class Benchmark {
 	companion object {
+		private val map = hashMapOf<String, Any>()
+		@JvmStatic
+		fun java() {
+			val let = { x: String, y: Any, block: (Map<String, Any>) -> Unit ->
+				map[x] = y
+				block(map)
+				map.remove(x)
+			}
+			let("reimu", 100) { 233 + it["reimu"] as Int }
+		}
+
 		const val cnt = 200000
 		//language=TEXT
 		const val core = """
@@ -54,12 +62,27 @@ $core))
 
 (print "loop count: " i)
 """
+
+		//language=TEXT
+		const val code3 = """
+(extern "org.lice.Benchmark" "java")
+
+; loops
+(def loop count block (|>
+		 (-> i 0)
+		 (while (< i count) (|> (block i)
+		 (-> i (+ i 1))))))
+
+(loop $cnt (lambda i (java)))
+
+(print "loop count: " i)
+"""
 	}
 
-	val map = hashMapOf<String, Any>()
+	val lice3 = mapAst(node = buildNode(code3))
 	val lice = mapAst(node = buildNode(code))
 	val lice2 = mapAst(node = buildNode(code2), symbolList = SymbolList.with {
-		provideFunction("code") { java(map) }
+		provideFunction("code") { java() }
 	})
 
 	@Test
@@ -91,20 +114,12 @@ $core))
 				i += 1
 			}
 		}
-		val map = mutableMapOf<String, Any>()
-		loop(cnt) { java(map) }
+		loop(cnt) { java() }
 	}
 
-
-
-	private fun java(map: MutableMap<String, Any>) {
-		val let = { x: String, y: Any, block: (Map<String, Any>) -> Unit ->
-			map[x] = y
-			block(map)
-			map.remove(x)
-		}
-		let("reimu", 100) {
-			val local = 233 + it["reimu"] as Int
-		}
+	@Test
+	fun benchmarkExtern() {
+		lice3.eval()
 	}
+
 }

@@ -17,3 +17,9 @@ Still, Lice provides full support for call-by-name, call-by-need, and call-by-va
 In this version, you can only find the basic language constructs (the `def` family, `lambda` family, control flows, boolean and integer operations), list operations and File/GUI/Netword APIs are removed.
 
 I tried my best to make the compiled jar small.
+
++ [code example](./example.lice)
+
+## Lice performance
+
+
