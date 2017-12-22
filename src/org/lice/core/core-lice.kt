@@ -69,18 +69,6 @@ fun SymbolList.addDefines() {
 	lambdaDefiner("lambda") { node -> ValueNode(node.eval()) }
 	lambdaDefiner("lazy") { node -> LazyValueNode({ node.eval() }) }
 	lambdaDefiner("expr") { it }
-
-	provideFunction("extern") { ls ->
-		val name = ls[1].toString()
-		val clazz = ls.first().toString()
-		val method = Class.forName(clazz).declaredMethods
-				.firstOrNull { Modifier.isStatic(it.modifiers) && it.name == name }
-				?: throw UnsatisfiedLinkError("Method $name not found for class $clazz")
-		provideFunction(name) {
-			method.invoke(null, *it.toTypedArray())
-		}
-		name
-	}
 }
 
 

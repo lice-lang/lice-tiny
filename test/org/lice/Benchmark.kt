@@ -22,7 +22,7 @@ class Benchmark {
 
 		const val cnt = 200000
 		//language=TEXT
-		const val core = """
+		private const val core = """
 (defexpr let x y block (|>
 			(-> x y)
 			(block)

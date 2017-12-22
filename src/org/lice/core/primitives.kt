@@ -21,23 +21,6 @@ fun SymbolList.addLiterals() {
 fun SymbolList.addNumberFunctions() {
 	provideFunction("->double") { cast<Number>(it.first()).toDouble() }
 	provideFunction("->int") { cast<Number>(it.first()).toInt() }
-	provideFunctionWithMeta("+") { meta, list ->
-		list.fold(NumberOperator(0)) { sum, value ->
-			if (value is Number) sum.plus(value, meta)
-			else typeMisMatch("Number", value, meta)
-		}.result
-	}
-	provideFunctionWithMeta("-") { meta, ls ->
-		when (ls.size) {
-			0 -> 0
-			1 -> ls.first()
-			else -> ls.drop(1)
-					.fold(NumberOperator(ls.first() as Number)) { sum, value ->
-						if (value is Number) sum.minus(value, meta)
-						else typeMisMatch("Number", value, meta)
-					}.result
-		}
-	}
 	provideFunctionWithMeta("/") { meta, ls ->
 		val init = cast<Number>(ls.first())
 		when (ls.size) {
@@ -67,8 +50,6 @@ fun SymbolList.addNumberFunctions() {
 			else typeMisMatch("Number", value, ln)
 		}.result
 	}
-	provideFunction("===") { (1 until it.size).all { i -> it[i] == it[i - 1] } }
-	provideFunction("!==") { (1 until it.size).none { i -> it[i] == it[i - 1] } }
 	provideFunctionWithMeta("==") { meta, ls ->
 		(1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) == 0 }
 	}
@@ -87,22 +68,6 @@ fun SymbolList.addNumberFunctions() {
 	provideFunctionWithMeta(">=") { meta, ls ->
 		(1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) >= 0 }
 	}
-	provideFunction("&") { paramList ->
-		paramList.map { cast<Number>(it).toInt() }.reduce { last, self -> last and self }
-	}
-	provideFunction("|") { paramList ->
-		paramList.map { cast<Number>(it).toInt() }.reduce { last, self -> last or self }
-	}
-	provideFunction("^") { paramList ->
-		paramList.map { cast<Number>(it).toInt() }.reduce { last, self -> last xor self }
-	}
-	provideFunction("~") { (it.first() as Number).toInt().inv() }
-}
-
-fun SymbolList.addBoolFunctions() {
-	provideFunction("&&") { ls -> ls.all(Any?::booleanValue) }
-	provideFunction("||") { ls -> ls.any(Any?::booleanValue) }
-	provideFunction("!") { ls -> ls.first().booleanValue().not() }
 }
 
 

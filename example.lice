@@ -43,3 +43,10 @@
 
 (let reimu 100 (lambda (|>
 		(print reimu))))
+
+; extern functions
+; must be a static Java function
+(extern "java.util.Objects" "equals")
+
+; calling the extern function
+(equals 1 1)

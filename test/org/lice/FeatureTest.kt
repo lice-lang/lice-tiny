@@ -22,7 +22,7 @@ class FeatureTest {
 	 */
 	@Test(timeout = 1000)
 	fun test1() {
-		"(print \"fuck\")" evalTo Unit
+		"(print \"fuck\")" evalTo null
 		""""lover~lover~fucker~fucker~"""" evalTo "lover~lover~fucker~fucker~"
 	}
 
@@ -31,7 +31,7 @@ class FeatureTest {
 	 */
 	@Test(timeout = 1000)
 	fun test2() {
-		"(print 233666)" evalTo Unit
+		"(print 233666)" evalTo null
 		"233666" evalTo 233666
 		"233666.0" evalTo 233666F
 		"233666.0000000000000000000000000000000" evalTo 233666.0

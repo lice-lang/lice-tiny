@@ -30,7 +30,6 @@ constructor(init: Boolean = true) {
 	}
 
 	private fun initialize() {
-		addMathFunctions()
 		addStandard()
 		addDefines()
 		addGetSetFunction()
@@ -38,7 +37,14 @@ constructor(init: Boolean = true) {
 		addNumberFunctions()
 		addLiterals()
 		addStringFunctions()
-		addBoolFunctions()
+		val withMetaHolders = FunctionWithMetaHolders(this)
+		withMetaHolders.javaClass.declaredMethods.forEach { method ->
+			provideFunctionWithMeta(method.name) { meta, list -> method.invoke(withMetaHolders, meta, list) }
+		}
+		val holders = FunctionHolders(this)
+		holders.javaClass.declaredMethods.forEach { method ->
+			provideFunction(method.name) { list -> method.invoke(holders, list) }
+		}
 	}
 
 	fun provideFunctionWithMeta(name: String, node: ProvidedFuncWithMeta) =

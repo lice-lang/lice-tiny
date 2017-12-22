@@ -5,12 +5,6 @@ import org.lice.util.InterpretException
 import org.lice.util.InterpretException.Factory.tooFewArgument
 import org.lice.util.InterpretException.Factory.typeMisMatch
 
-fun SymbolList.addMathFunctions() {
-	provideFunction("sqrt") { Math.sqrt((it.first() as Number).toDouble()) }
-	provideFunction("sin") { Math.sin((it.first() as Number).toDouble()) }
-	provideFunction("rand") { Math.random() }
-}
-
 fun SymbolList.addStringFunctions() {
 	provideFunction("->str") { it.first().toString() }
 	provideFunctionWithMeta("str->int") { ln, ls ->

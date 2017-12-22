@@ -9,7 +9,7 @@ import kotlin.test.*
  * @author ice1000
  */
 
-infix fun String.evalTo(any: Any) = assertEquals(any, Lice.run(this))
+infix fun String.evalTo(any: Any?) = assertEquals(any, Lice.run(this))
 
 fun String.shouldBeTrue() = assertTrue(true == Lice.run(this))
 fun String.shouldBeFalse() = assertTrue(true != Lice.run(this))

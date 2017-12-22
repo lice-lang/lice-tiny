@@ -22,4 +22,29 @@ I tried my best to make the compiled jar small.
 
 ## Lice performance
 
+Code to run:
 
+```lisp
+; loops
+(def loop count block (|>
+    (-> i 0)
+    (while (< i count) (|> (block i)
+    (-> i (+ i 1))))))
+
+(loop 200000 (lambda i (|>
+    (defexpr let x y block (|>
+        (-> x y)
+        (block)
+        (undef x)))
+    (let reimu 100 (lambda (|> reimu))))))
+
+(print "loop count: " i)
+```
+
+Condition|Time
+:---:|:---:
+Lice call Java using `extern`|404ms
+Lice call Java using Lice API|407ms
+Pure Java|19ms
+Pure Lice|1039ms
+Java call Lice using Lice API|649ms

@@ -1,0 +1,36 @@
+package org.lice.core
+
+import org.lice.lang.NumberOperator
+import org.lice.model.MetaData
+import org.lice.util.InterpretException
+import java.lang.reflect.Modifier
+
+@Suppress("unused")
+class FunctionWithMetaHolders(val symbolList: SymbolList) {
+	fun `-`(meta: MetaData, list: List<Any?>) = when (list.size) {
+		0 -> 0
+		1 -> list.first()
+		else -> list.drop(1).fold(NumberOperator(list.first() as Number)) { sum, value ->
+			if (value is Number) sum.minus(value, meta)
+			else InterpretException.typeMisMatch("Number", value, meta)
+		}.result
+	}
+
+	fun `+`(meta: MetaData, list: List<Any?>) =
+			list.fold(NumberOperator(0)) { sum, value ->
+				if (value is Number) sum.plus(value, meta)
+				else InterpretException.typeMisMatch("Number", value, meta)
+			}.result
+
+	fun extern(meta: MetaData, ls: List<Any?>): Any? {
+		val name = ls[1].toString()
+		val clazz = ls.first().toString()
+		val method = Class.forName(clazz).declaredMethods
+				.firstOrNull { Modifier.isStatic(it.modifiers) && it.name == name }
+				?: throw UnsatisfiedLinkError("Method $name not found for class $clazz\nat line: ${meta.lineNumber}")
+		symbolList.provideFunction(name) {
+			method.invoke(null, *it.toTypedArray())
+		}
+		return name
+	}
+}
