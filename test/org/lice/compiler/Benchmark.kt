@@ -1,7 +1,10 @@
 package org.lice.compiler
 
 import org.junit.Test
+import org.lice.Lice
+import org.lice.core.Func
 import org.lice.core.SymbolList
+import org.lice.model.MetaData
 import org.lice.parse.buildNode
 import org.lice.parse.mapAst
 import org.lice.util.cast
@@ -10,6 +13,21 @@ class Benchmark {
 	companion object {
 		const val cnt = 200000
 		//language=TEXT
+		const val core = """
+(defexpr let x y block (|>
+			(-> x y)
+			(block)
+			(undef x)))
+(let reimu 100 (lambda (|>
+		reimu)))
+"""
+
+		const val func = """
+(def codes-to-run (|>
+$core))
+"""
+
+		//language=TEXT
 		const val code = """
 ; loops
 (def loop count block (|>
@@ -17,26 +35,14 @@ class Benchmark {
 		 (while (< i count) (|> (block i)
 		 (-> i (+ i 1))))))
 
-(loop $cnt (lambda i (|>
-	(defexpr let x y block (|>
-			(-> x y)
-			(block)
-			(undef x)))
-	(let reimu 100 (lambda (|>
-			reimu))))))
+(loop $cnt (lambda i (|> $core)))
 
 (print "loop count: " i)
 """
 
 		//language=TEXT
 		const val code2 = """
-(loop $cnt (lambda i (|>
-	(defexpr let x y block (|>
-			(-> x y)
-			(block)
-			(undef x)))
-	(let reimu 100 (lambda (|>
-			reimu))))))
+(loop $cnt (lambda i (|> $core)))
 
 (print "loop count: " i)
 """
@@ -55,8 +61,18 @@ class Benchmark {
 	}
 
 	@Test
-	fun benchmarkCombine() {
+	fun benchmarkLiceCallJava() {
 		lice2.eval()
+	}
+
+	@Test
+	fun benchmarkJavaCallLice() {
+		val symbols = SymbolList()
+		Lice.run(func, symbols)
+		val codes = symbols.getVariable("codes-to-run") as Func
+		repeat(cnt) {
+			codes.invoke(MetaData.EmptyMetaData, emptyList())
+		}
 	}
 
 	@Test
