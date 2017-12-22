@@ -48,16 +48,7 @@ class FunctionDefinedMangledHolder(val symbolList: SymbolList) {
 
 	fun `-$`(metaData: MetaData, ls: List<Node>): Node {
 		if (ls.size < 2) InterpretException.tooFewArgument(2, ls.size, metaData)
-		var str = cast<SymbolNode>(ls.first()).name
-		while (true) {
-			if (symbolList.isVariableDefined(str)) {
-				val v = symbolList.getVariable(str)
-				if (v is SymbolNode) str = v.name
-				else break
-			} else break
-		}
-		val v = ls[1]
-		symbolList.defineVariable(str, ValueNode(v.eval()))
+		symbolList.defineVariable(cast<SymbolNode>(ls.first()).name, ValueNode(ls[1].eval()))
 		return ls.first()
 	}
 

@@ -15,43 +15,47 @@ import org.lice.util.InterpretException.Factory.numberOfArgumentNotMatch
 import org.lice.util.InterpretException.Factory.tooFewArgument
 import org.lice.util.InterpretException.Factory.typeMisMatch
 import org.lice.util.cast
-import java.lang.reflect.Modifier
 
 private fun lambdaNameGen() = "\t${++lambdaNameCounter}"
 private var lambdaNameCounter = -100
 fun Any?.booleanValue() = this as? Boolean ?: (this != null)
 
-fun SymbolList.addDefines() {
-	fun defFunc(name: String, params: List<String>, block: (Node) -> Node, body: Node) {
-		defineFunction(name) { meta, args ->
-			val backup = params.map(this::getVariable)
-			if (args.size != params.size)
-				numberOfArgumentNotMatch(params.size, args.size, meta)
-			args.map(block).forEachIndexed { index, obj -> defineVariable(params[index], obj) }
-			val ret = ValueNode(body.eval(), meta)
-			backup.forEachIndexed { index, node ->
-				when (node) {
-					is Node -> defineVariable(params[index], node)
-					null -> removeVariable(params[index])
-					else -> defineFunction(params[index], cast(node))
-				}
+private inline fun SymbolList.defFunc(
+		name: String,
+		params: List<String>,
+		crossinline block: (Node) -> Node,
+		body: Node) {
+	defineFunction(name) { meta, args ->
+		val backup = params.map(this::getVariable)
+		if (args.size != params.size)
+			numberOfArgumentNotMatch(params.size, args.size, meta)
+		args.map(block).forEachIndexed { index, obj -> defineVariable(params[index], obj) }
+		val ret = ValueNode(body.eval(), meta)
+		backup.forEachIndexed { index, node ->
+			when (node) {
+				is Node -> defineVariable(params[index], node)
+				null -> removeVariable(params[index])
+				else -> defineFunction(params[index], cast(node))
 			}
-			ret
 		}
+		ret
 	}
+}
 
-	fun definer(funName: String, block: (Node) -> Node) {
-		defineFunction(funName) { meta, ls ->
-			if (ls.size < 2) tooFewArgument(2, ls.size, meta)
-			val name = cast<SymbolNode>(ls.first()).name
-			val body = ls.last()
-			val params = ls.subList(1, ls.size - 1)
-					.map { (it as? SymbolNode)?.name ?: notSymbol(meta) }
-			val override = isVariableDefined(name)
-			defFunc(name, params, block, body)
-			return@defineFunction ValueNode("${if (override) "overridden" else "defined"}: $name")
-		}
+private inline fun SymbolList.definer(funName: String, crossinline block: (Node) -> Node) {
+	defineFunction(funName) { meta, ls ->
+		if (ls.size < 2) tooFewArgument(2, ls.size, meta)
+		val name = cast<SymbolNode>(ls.first()).name
+		val body = ls.last()
+		val params = ls.subList(1, ls.size - 1)
+				.map { (it as? SymbolNode)?.name ?: notSymbol(meta) }
+		val override = isVariableDefined(name)
+		defFunc(name, params, block, body)
+		return@defineFunction ValueNode("${if (override) "overridden" else "defined"}: $name")
 	}
+}
+
+fun SymbolList.addDefines() {
 	definer("def") { node -> ValueNode(node.eval()) }
 	definer("deflazy") { node -> LazyValueNode({ node.eval() }) }
 	definer("defexpr") { it }

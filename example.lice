@@ -42,7 +42,7 @@
 		(undef x)))
 
 (let reimu 100 (lambda (|>
-		(print reimu))))
+		(print x))))
 
 ; extern functions
 ; must be a static Java function

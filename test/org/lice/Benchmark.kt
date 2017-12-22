@@ -28,7 +28,7 @@ class Benchmark {
 			(block)
 			(undef x)))
 (let reimu 100 (lambda (|>
-		reimu)))
+		x)))
 """
 
 		//language=TEXT
