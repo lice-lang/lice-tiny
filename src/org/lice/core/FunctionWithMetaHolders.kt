@@ -56,4 +56,10 @@ class FunctionWithMetaHolders(val symbolList: SymbolList) {
 		else InterpretException.typeMisMatch("Number", value, meta)
 	}.result
 
+	fun format(meta: MetaData, ls: List<Any?>): String {
+		if (ls.isEmpty()) InterpretException.tooFewArgument(1, ls.size, meta)
+		val format = ls.first().toString()
+		return String.format(format, *ls.subList(1, ls.size).toTypedArray())
+	}
+
 }

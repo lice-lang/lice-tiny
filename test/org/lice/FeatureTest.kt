@@ -100,6 +100,9 @@ class FeatureTest {
 		"""
 (str-con "boy" "Next" "Door")
 """ evalTo "boyNextDoor"
+		"""
+(format "%s%s%s" "boy" "Next" "Door")
+""" evalTo "boyNextDoor"
 	}
 
 	/**

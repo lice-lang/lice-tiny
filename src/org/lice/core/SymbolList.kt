@@ -32,10 +32,7 @@ constructor(init: Boolean = true) {
 
 	private fun initialize() {
 		addDefines()
-		addControlFlowFunctions()
-		addNumberFunctions()
 		addLiterals()
-		addStringFunctions()
 		val withMetaHolders = FunctionWithMetaHolders(this)
 		withMetaHolders.javaClass.declaredMethods.forEach { method ->
 			provideFunctionWithMeta(method.name) { meta, list -> method.invoke(withMetaHolders, meta, list) }
@@ -52,9 +49,10 @@ constructor(init: Boolean = true) {
 		}
 		val mangledHolder = FunctionMangledHolder(this)
 		mangledHolder.javaClass.declaredMethods.forEach { method ->
-			provideFunctionWithMeta(method.name.replace('$', '>')) { meta, list ->
-				method.invoke(mangledHolder, meta, list)
-			}
+			provideFunctionWithMeta(method.name
+					.replace('$', '>')
+					.replace('&', '<')
+					.replace('_', '/')) { meta, list -> method.invoke(mangledHolder, meta, list) }
 		}
 	}
 
@@ -77,6 +75,12 @@ constructor(init: Boolean = true) {
 	fun isVariableDefined(name: String): Boolean = variables.containsKey(name)
 	fun removeVariable(name: String) = variables.remove(name)
 	fun getVariable(name: String) = variables[name]
+
+	fun addLiterals() {
+		defineVariable("true", ValueNode(true))
+		defineVariable("false", ValueNode(false))
+		defineVariable("null", ValueNode(null))
+	}
 
 	companion object {
 		@JvmStatic
