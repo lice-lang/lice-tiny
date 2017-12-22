@@ -8,6 +8,7 @@ package org.lice.core
 
 import org.lice.lang.Echoer
 import org.lice.model.*
+import org.lice.util.cast
 import org.lice.util.className
 import java.util.function.Consumer
 
@@ -30,9 +31,7 @@ constructor(init: Boolean = true) {
 	}
 
 	private fun initialize() {
-		addStandard()
 		addDefines()
-		addGetSetFunction()
 		addControlFlowFunctions()
 		addNumberFunctions()
 		addLiterals()
@@ -44,6 +43,18 @@ constructor(init: Boolean = true) {
 		val holders = FunctionHolders(this)
 		holders.javaClass.declaredMethods.forEach { method ->
 			provideFunction(method.name) { list -> method.invoke(holders, list) }
+		}
+		val definedMangledHolder = FunctionDefinedMangledHolder(this)
+		definedMangledHolder.javaClass.declaredMethods.forEach { method ->
+			defineFunction(method.name.replace('$', '>')) { meta, list ->
+				cast(method.invoke(definedMangledHolder, meta, list))
+			}
+		}
+		val mangledHolder = FunctionMangledHolder(this)
+		mangledHolder.javaClass.declaredMethods.forEach { method ->
+			provideFunctionWithMeta(method.name.replace('$', '>')) { meta, list ->
+				method.invoke(mangledHolder, meta, list)
+			}
 		}
 	}
 

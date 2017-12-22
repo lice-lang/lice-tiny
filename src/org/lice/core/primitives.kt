@@ -6,11 +6,11 @@
 
 package org.lice.core
 
+import org.lice.lang.NumberOperator
+import org.lice.lang.NumberOperator.Leveler.compare
 import org.lice.model.ValueNode
 import org.lice.util.InterpretException.Factory.typeMisMatch
 import org.lice.util.cast
-import org.lice.lang.NumberOperator
-import org.lice.lang.NumberOperator.Leveler.compare
 
 fun SymbolList.addLiterals() {
 	defineVariable("true", ValueNode(true))
@@ -19,8 +19,6 @@ fun SymbolList.addLiterals() {
 }
 
 fun SymbolList.addNumberFunctions() {
-	provideFunction("->double") { cast<Number>(it.first()).toDouble() }
-	provideFunction("->int") { cast<Number>(it.first()).toInt() }
 	provideFunctionWithMeta("/") { meta, ls ->
 		val init = cast<Number>(ls.first())
 		when (ls.size) {
@@ -33,41 +31,10 @@ fun SymbolList.addNumberFunctions() {
 					}.result
 		}
 	}
-	provideFunctionWithMeta("%") { meta, ls ->
-		when (ls.size) {
-			0 -> 0
-			1 -> ls.first()
-			else -> ls.drop(1)
-					.fold(NumberOperator(cast(ls.first()))) { sum, value ->
-						if (value is Number) sum.rem(value, meta)
-						else typeMisMatch("Number", value, meta)
-					}.result
-		}
-	}
-	provideFunctionWithMeta("*") { ln, ls ->
-		ls.fold(NumberOperator(1)) { sum, value ->
-			if (value is Number) sum.times(value, ln)
-			else typeMisMatch("Number", value, ln)
-		}.result
-	}
-	provideFunctionWithMeta("==") { meta, ls ->
-		(1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) == 0 }
-	}
-	provideFunctionWithMeta("!=") { meta, ls ->
-		(1 until ls.size).none { compare(ls[it - 1] as Number, ls[it] as Number, meta) == 0 }
-	}
-	provideFunctionWithMeta("<") { meta, ls ->
-		(1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) < 0 }
-	}
-	provideFunctionWithMeta(">") { meta, ls ->
-		(1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) > 0 }
-	}
-	provideFunctionWithMeta("<=") { meta, ls ->
-		(1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) <= 0 }
-	}
-	provideFunctionWithMeta(">=") { meta, ls ->
-		(1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) >= 0 }
-	}
+	provideFunctionWithMeta("<") { meta, ls -> (1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) < 0 } }
+	provideFunctionWithMeta(">") { meta, ls -> (1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) > 0 } }
+	provideFunctionWithMeta("<=") { meta, ls -> (1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) <= 0 } }
+	provideFunctionWithMeta(">=") { meta, ls -> (1 until ls.size).all { compare(ls[it - 1] as Number, ls[it] as Number, meta) >= 0 } }
 }
 
 

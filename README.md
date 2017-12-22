@@ -43,8 +43,8 @@ Code to run:
 
 Condition|Time
 :---:|:---:
-Lice call Java using `extern`|404ms
-Lice call Java using Lice API|407ms
-Pure Java|19ms
-Pure Lice|1039ms
-Java call Lice using Lice API|649ms
+Lice call Java using `extern`|350ms
+Lice call Java using Lice API|295ms
+Pure Java|13ms
+Pure Lice|897ms
+Java call Lice using Lice API|629ms

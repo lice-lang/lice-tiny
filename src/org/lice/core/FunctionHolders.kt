@@ -25,4 +25,5 @@ class FunctionHolders(val symbolList: SymbolList) {
 	fun `|`(list: List<Any?>) = list.map { cast<Number>(it).toInt() }.reduce { last, self -> last or self }
 	fun `^`(list: List<Any?>) = list.map { cast<Number>(it).toInt() }.reduce { last, self -> last xor self }
 	fun `~`(it: List<Any?>) = (it.first() as Number).toInt().inv()
+	fun `str-con`(it: List<Any?>) = it.joinToString(transform = Any?::toString, separator = "")
 }

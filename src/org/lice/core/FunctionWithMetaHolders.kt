@@ -3,6 +3,7 @@ package org.lice.core
 import org.lice.lang.NumberOperator
 import org.lice.model.MetaData
 import org.lice.util.InterpretException
+import org.lice.util.cast
 import java.lang.reflect.Modifier
 
 @Suppress("unused")
@@ -33,4 +34,26 @@ class FunctionWithMetaHolders(val symbolList: SymbolList) {
 		}
 		return name
 	}
+
+	fun `==`(meta: MetaData, ls: List<Any?>) = (1 until ls.size)
+			.all { NumberOperator.compare(ls[it - 1] as Number, ls[it] as Number, meta) == 0 }
+
+	fun `!=`(meta: MetaData, ls: List<Any?>) = (1 until ls.size)
+			.none { NumberOperator.compare(ls[it - 1] as Number, ls[it] as Number, meta) == 0 }
+
+	fun `%`(meta: MetaData, ls: List<Any?>) = when (ls.size) {
+		0 -> 0
+		1 -> ls.first()
+		else -> ls.drop(1)
+				.fold(NumberOperator(cast(ls.first()))) { sum, value ->
+					if (value is Number) sum.rem(value, meta)
+					else InterpretException.typeMisMatch("Number", value, meta)
+				}.result
+	}
+
+	fun `*`(meta: MetaData, ls: List<Any?>) = ls.fold(NumberOperator(1)) { sum, value ->
+		if (value is Number) sum.times(value, meta)
+		else InterpretException.typeMisMatch("Number", value, meta)
+	}.result
+
 }

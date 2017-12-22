@@ -6,7 +6,6 @@ import org.lice.util.InterpretException.Factory.tooFewArgument
 import org.lice.util.InterpretException.Factory.typeMisMatch
 
 fun SymbolList.addStringFunctions() {
-	provideFunction("->str") { it.first().toString() }
 	provideFunctionWithMeta("str->int") { ln, ls ->
 		val res = ls.first().toString()
 		when {
@@ -32,7 +31,6 @@ fun SymbolList.addStringFunctions() {
 		if (a is Number) "0${Integer.toOctalString(a.toInt())}"
 		else typeMisMatch("Int", a, ln)
 	}
-	provideFunction("str-con") { it.joinToString(transform = Any?::toString, separator = "") }
 	provideFunctionWithMeta("format") { ln, ls ->
 		if (ls.isEmpty()) tooFewArgument(1, ls.size, ln)
 		val format = ls.first().toString()
