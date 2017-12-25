@@ -8,6 +8,7 @@ package org.lice.core
 
 import org.lice.lang.Echoer
 import org.lice.model.*
+import org.lice.model.MetaData.Factory.EmptyMetaData
 import org.lice.util.cast
 import org.lice.util.className
 import java.util.function.Consumer
@@ -78,11 +79,16 @@ constructor(init: Boolean = true) {
 	fun removeVariable(name: String) = variables.remove(name)
 	fun getVariable(name: String) = variables[name]
 
-	fun addLiterals() {
+	private fun addLiterals() {
 		defineVariable("true", ValueNode(true))
 		defineVariable("false", ValueNode(false))
 		defineVariable("null", ValueNode(null))
 	}
+
+	fun extractLiceFunction(name: String): ProvidedFunc
+			= { ls -> (getVariable(name) as Func)(EmptyMetaData, ls.map { ValueNode(it) }) }
+
+	fun extractLiceVariable(name: String): Any? = (getVariable(name) as Node).eval()
 
 	companion object {
 		@JvmStatic

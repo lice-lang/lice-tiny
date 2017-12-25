@@ -1,9 +1,7 @@
 package org.lice
 
 import org.junit.Test
-import org.lice.core.Func
 import org.lice.core.SymbolList
-import org.lice.model.MetaData
 import org.lice.parse.buildNode
 import org.lice.parse.mapAst
 
@@ -99,10 +97,8 @@ $core))
 	fun benchmarkJavaCallLice() {
 		val symbols = SymbolList()
 		Lice.run(func, symbols)
-		val codes = symbols.getVariable("codes-to-run") as Func
-		repeat(cnt) {
-			codes.invoke(MetaData.EmptyMetaData, emptyList())
-		}
+		val codes = symbols.extractLiceFunction("codes-to-run")
+		repeat(cnt) { codes.invoke(emptyList()) }
 	}
 
 	@Test
