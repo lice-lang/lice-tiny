@@ -24,10 +24,8 @@ fun Any?.className(): String = if (null != this) this.javaClass.name else "NullT
 inline fun <reified R> cast(any: Any?) =
 		any as? R ?: throw InterpretException("$any is not ${R::class.java.name}")
 
-inline fun runReflection(block: () -> Unit) {
-	try {
-		block()
-	} catch (e: InvocationTargetException) {
-		throw e.targetException
-	}
+inline fun <T> runReflection(block: () -> T) = try {
+	block()
+} catch (e: InvocationTargetException) {
+	throw e.targetException
 }
