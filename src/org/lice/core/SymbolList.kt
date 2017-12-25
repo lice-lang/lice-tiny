@@ -11,6 +11,7 @@ import org.lice.model.*
 import org.lice.model.MetaData.Factory.EmptyMetaData
 import org.lice.util.cast
 import org.lice.util.className
+import java.lang.reflect.InvocationTargetException
 import java.util.function.Consumer
 
 class SymbolList
@@ -39,7 +40,11 @@ constructor(init: Boolean = true) {
 		val definedMangledHolder = FunctionDefinedMangledHolder(this)
 		definedMangledHolder.javaClass.declaredMethods.forEach { method ->
 			defineFunction(method.name.replace('$', '>')) { meta, list ->
-				cast(method.invoke(definedMangledHolder, meta, list))
+				cast(try {
+					method.invoke(definedMangledHolder, meta, list)
+				} catch (e: InvocationTargetException) {
+					throw e.targetException
+				})
 			}
 		}
 		val mangledHolder = FunctionMangledHolder(this)
@@ -47,16 +52,34 @@ constructor(init: Boolean = true) {
 			provideFunctionWithMeta(method.name
 					.replace('$', '>')
 					.replace('&', '<')
-					.replace('_', '/')) { meta, list -> method.invoke(mangledHolder, meta, list) }
+					.replace('_', '/')) { meta, list ->
+				try {
+					method.invoke(mangledHolder, meta, list)
+				} catch (e: InvocationTargetException) {
+					throw e.targetException
+				}
+			}
 		}
 	}
 
 	fun bindMethodsWithMetaOf(any: Any) = any.javaClass.declaredMethods.forEach { method ->
-		provideFunctionWithMeta(method.name) { meta, list -> method.invoke(any, meta, list) }
+		provideFunctionWithMeta(method.name) { meta, list ->
+			try {
+				method.invoke(any, meta, list)
+			} catch (e: InvocationTargetException) {
+				throw e.targetException
+			}
+		}
 	}
 
 	fun bindMethodsOf(any: Any) = any.javaClass.declaredMethods.forEach { method ->
-		provideFunction(method.name) { list -> method.invoke(any, list) }
+		provideFunction(method.name) { list ->
+			try {
+				method.invoke(any, list)
+			} catch (e: InvocationTargetException) {
+				throw e.targetException
+			}
+		}
 	}
 
 	fun provideFunctionWithMeta(name: String, node: ProvidedFuncWithMeta) =
