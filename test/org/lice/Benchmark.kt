@@ -79,9 +79,9 @@ $core))
 """
 	}
 
-	val lice3 = mapAst(node = buildNode(code3))
-	val lice = mapAst(node = buildNode(code))
-	val lice2 = mapAst(node = buildNode(code2), symbolList = SymbolList.with {
+	private val lice3 = mapAst(node = buildNode(code3))
+	private val lice = mapAst(node = buildNode(code))
+	private val lice2 = mapAst(node = buildNode(code2), symbolList = SymbolList.with {
 		provideFunction("code") { java() }
 	})
 

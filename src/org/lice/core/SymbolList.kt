@@ -33,14 +33,8 @@ constructor(init: Boolean = true) {
 	private fun initialize() {
 		addDefines()
 		addLiterals()
-		val withMetaHolders = FunctionWithMetaHolders(this)
-		withMetaHolders.javaClass.declaredMethods.forEach { method ->
-			provideFunctionWithMeta(method.name) { meta, list -> method.invoke(withMetaHolders, meta, list) }
-		}
-		val holders = FunctionHolders(this)
-		holders.javaClass.declaredMethods.forEach { method ->
-			provideFunction(method.name) { list -> method.invoke(holders, list) }
-		}
+		bindMethodsWithMetaOf(FunctionWithMetaHolders(this))
+		bindMethodsOf(FunctionHolders(this))
 		val definedMangledHolder = FunctionDefinedMangledHolder(this)
 		definedMangledHolder.javaClass.declaredMethods.forEach { method ->
 			defineFunction(method.name.replace('$', '>')) { meta, list ->
@@ -54,6 +48,14 @@ constructor(init: Boolean = true) {
 					.replace('&', '<')
 					.replace('_', '/')) { meta, list -> method.invoke(mangledHolder, meta, list) }
 		}
+	}
+
+	fun bindMethodsWithMetaOf(any: Any) = any.javaClass.declaredMethods.forEach { method ->
+		provideFunctionWithMeta(method.name) { meta, list -> method.invoke(any, meta, list) }
+	}
+
+	fun bindMethodsOf(any: Any) = any.javaClass.declaredMethods.forEach { method ->
+		provideFunction(method.name) { list -> method.invoke(any, list) }
 	}
 
 	fun provideFunctionWithMeta(name: String, node: ProvidedFuncWithMeta) =
