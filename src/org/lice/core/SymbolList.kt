@@ -9,9 +9,7 @@ package org.lice.core
 import org.lice.lang.Echoer
 import org.lice.model.*
 import org.lice.model.MetaData.Factory.EmptyMetaData
-import org.lice.util.cast
-import org.lice.util.className
-import java.lang.reflect.InvocationTargetException
+import org.lice.util.*
 import java.util.function.Consumer
 
 class SymbolList
@@ -40,11 +38,7 @@ constructor(init: Boolean = true) {
 		val definedMangledHolder = FunctionDefinedMangledHolder(this)
 		definedMangledHolder.javaClass.declaredMethods.forEach { method ->
 			defineFunction(method.name.replace('$', '>')) { meta, list ->
-				cast(try {
-					method.invoke(definedMangledHolder, meta, list)
-				} catch (e: InvocationTargetException) {
-					throw e.targetException
-				})
+				cast(runReflection { method.invoke(definedMangledHolder, meta, list) })
 			}
 		}
 		val mangledHolder = FunctionMangledHolder(this)
@@ -53,33 +47,17 @@ constructor(init: Boolean = true) {
 					.replace('$', '>')
 					.replace('&', '<')
 					.replace('_', '/')) { meta, list ->
-				try {
-					method.invoke(mangledHolder, meta, list)
-				} catch (e: InvocationTargetException) {
-					throw e.targetException
-				}
+				runReflection { method.invoke(mangledHolder, meta, list) }
 			}
 		}
 	}
 
 	fun bindMethodsWithMetaOf(any: Any) = any.javaClass.declaredMethods.forEach { method ->
-		provideFunctionWithMeta(method.name) { meta, list ->
-			try {
-				method.invoke(any, meta, list)
-			} catch (e: InvocationTargetException) {
-				throw e.targetException
-			}
-		}
+		provideFunctionWithMeta(method.name) { meta, list -> runReflection { method.invoke(any, meta, list) } }
 	}
 
 	fun bindMethodsOf(any: Any) = any.javaClass.declaredMethods.forEach { method ->
-		provideFunction(method.name) { list ->
-			try {
-				method.invoke(any, list)
-			} catch (e: InvocationTargetException) {
-				throw e.targetException
-			}
-		}
+		provideFunction(method.name) { list -> runReflection { method.invoke(any, list) } }
 	}
 
 	fun provideFunctionWithMeta(name: String, node: ProvidedFuncWithMeta) =
