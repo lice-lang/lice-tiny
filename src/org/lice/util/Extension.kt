@@ -20,12 +20,13 @@ inline fun forceRun(block: () -> Unit) {
 
 fun Any?.className(): String = if (null != this) this.javaClass.name else "NullType"
 
-@Suppress("UNCHECKED_CAST")
 inline fun <reified R> cast(any: Any?) =
 		any as? R ?: throw InterpretException("$any is not ${R::class.java.name}")
 
 inline fun <T> runReflection(block: () -> T) = try {
 	block()
 } catch (e: InvocationTargetException) {
-	throw e.targetException
+	var exception = e.targetException
+	while (exception is InvocationTargetException) exception = exception.targetException
+	throw exception
 }
