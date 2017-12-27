@@ -20,8 +20,8 @@ inline fun forceRun(block: () -> Unit) {
 
 fun Any?.className(): String = if (null != this) this.javaClass.name else "NullType"
 
-inline fun <reified R> cast(any: Any?) =
-		any as? R ?: throw InterpretException("$any is not ${R::class.java.name}")
+@Suppress("UNCHECKED_CAST")
+fun <R> cast(any: Any?) = any as R
 
 inline fun <T> runReflection(block: () -> T) = try {
 	block()
