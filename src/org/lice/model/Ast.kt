@@ -41,7 +41,7 @@ class LazyValueNode(lambda: () -> Any?, override val meta: MetaData = EmptyMetaD
 	override fun toString() = "lazy: <$value>"
 }
 
-class ExpressionNode(private val node: Node, override val meta: MetaData, val params: List<Node>) : Node {
+class ExpressionNode(val node: Node, override val meta: MetaData, val params: List<Node>) : Node {
 	override fun eval() = (node.eval() as? Func ?: notFunction(meta)).invoke(meta, params).eval()
 	override fun toString() = "function with ${params.size} params"
 }
