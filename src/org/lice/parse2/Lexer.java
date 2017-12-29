@@ -1,10 +1,9 @@
 package org.lice.parse2;
 
 import org.jetbrains.annotations.NotNull;
+import org.lice.model.MetaData;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Lexer {
 	private static final String upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -13,16 +12,16 @@ public class Lexer {
 	private static final String binNumbers = "01";
 	private static final String octNumbers = "01234567";
 	private static final String decNumbers = "0123456789";
-	private static final String hexNumbers = "ABCDEF";
-	private static final String blanks = " \f\n\t,";
+	private static final String hexNumbers = "0123456789ABCDEF";
+	private static final String blanks = " \f\n\t\r,";
 	private static final String lispSymbols = "()";
-	private static final String tokenDelimiters = blanks + lispSymbols;
+	private static final String tokenDelimiters = blanks + lispSymbols + "\0";
 
 	private static final String firstIdButNotNumberChars =
 			upperCaseLetters + lowerCaseLetters + commonSymbols;
 	private static final String idChars = firstIdButNotNumberChars + decNumbers;
 
-	Lexer(String sourceCode) {
+	public Lexer(String sourceCode) {
 		this.sourceCode = sourceCode.toCharArray();
 		doSplitTokens();
 	}
@@ -39,11 +38,6 @@ public class Lexer {
 
 	public void nextToken() {
 		this.currentTokenIndex++;
-	}
-
-	@Deprecated
-	public void resetLexer() {
-		this.currentTokenIndex = 0;
 	}
 
 	private void doSplitTokens() {
@@ -69,10 +63,12 @@ public class Lexer {
 				nextChar();
 			}
 			else {
-				; // lexError();
+				throw new LexException(new MetaData(this.line, this.line, this.col, this.col+1),
+						"Unrecognized character " + Character.toString(currentChar()));
 			}
 		}
-		tokenBuffer.add(new Token(Token.TokenKind.EOI, "", this.line, this.col, this.col+1));
+		tokenBuffer.add(new Token(Token.TokenKind.EOI, "",
+				this.line, this.line, this.col, this.col+1));
 		this.currentTokenIndex = 0;
 	}
 
@@ -80,11 +76,8 @@ public class Lexer {
 		int line = this.line;
 		int startAtCol = this.col;
 		String str = scanFullString(idChars);
-
-		assert this.col > startAtCol;
-		assert this.line == line;
-
-		this.tokenBuffer.add(new Token(Token.TokenKind.Identifier, str, this.line, startAtCol, this.col));
+		this.tokenBuffer.add(new Token(Token.TokenKind.Identifier, str,
+				this.line, this.line, startAtCol, this.col));
 	}
 
 	private void lexNumberOrIdentifier() {
@@ -118,12 +111,12 @@ public class Lexer {
 			}
 		}
 
-		if (tokenDelimiters.contains(Character.toString(currentChar())) ) {
+		if ( !tokenDelimiters.contains(Character.toString(currentChar())) ) {
 			String fullIdStr = numberStr + scanFullString(idChars);
-			tokenBuffer.add(new Token(Token.TokenKind.Identifier, fullIdStr, line, startAtCol, this.col));
+			tokenBuffer.add(new Token(Token.TokenKind.Identifier, fullIdStr, line, line, startAtCol, this.col));
 		}
 		else {
-			tokenBuffer.add(new Token(Token.TokenKind.NumericLiteral, numberStr, line, startAtCol, this.col));
+			tokenBuffer.add(new Token(Token.TokenKind.NumericLiteral, numberStr, line, line, startAtCol, this.col));
 		}
 	}
 
@@ -140,7 +133,7 @@ public class Lexer {
 	private void lexSingleCharToken() {
 		this.tokenBuffer.add(
 				new Token(Token.TokenKind.LispKwd, Character.toString(currentChar()),
-						this.line, this.col, this.col+1));
+						this.line, this.line, this.col, this.col+1));
 		nextChar();
 	}
 
@@ -148,12 +141,13 @@ public class Lexer {
 		int atLine = this.line;
 		int startAtCol = this.col;
 
+		nextChar();
+
 		StringBuilder builder = new StringBuilder();
-		while (currentChar() != '"'
-				&& currentChar() != '\0'
-				&& currentChar() != '"') {
+		while (currentChar() != '"' && currentChar() != '\0') {
 			if (currentChar() != '\\') {
 				builder.append(currentChar());
+				nextChar();
 			}
 			else {
 				switch (peekOneChar()) {
@@ -162,20 +156,24 @@ public class Lexer {
 					case 't':  builder.append('\t'); break;
 					case '\\': builder.append('\\'); break;
 					case '"':  builder.append('\"'); break;
-					default:   ; // @todo LexError();
+					default:
+						throw new LexException(new MetaData(this.line, this.line, this.col, this.col+2),
+								"Illegal conversion sequence \\" + peekOneChar());
 				}
+				nextChar();
+				nextChar();
 			}
 		}
 
-		if (currentChar() == '\n') {
-			// @todo lexError
+		if (currentChar() == '\0') {
+			throw new LexException(new MetaData(this.line, this.line, this.col, this.col+1),
+					"Unexpected EndOfInput.");
 		}
-		else if (currentChar() == '\0') {
-			// @todo lexError
-		}
+		nextChar();
 
 		this.tokenBuffer.add(
-				new Token(Token.TokenKind.StringLiteral, builder.toString(), atLine, startAtCol, this.col));
+				new Token(Token.TokenKind.StringLiteral, builder.toString(),
+							atLine, this.line, startAtCol, this.col));
 	}
 
 	private char currentChar() {

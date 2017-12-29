@@ -16,7 +16,8 @@ import org.lice.util.InterpretException.Factory.notFunction
 import org.lice.util.InterpretException.Factory.undefinedVariable
 import org.lice.util.className
 
-class MetaData(private val beginLine: Int = -1) {
+class MetaData(val beginLine: Int = -1, val endLine: Int = -1,
+								val beginIndex: Int = -1, val endIndex: Int = -1) {
 	val lineNumber: Int get() = beginLine
 
 	companion object Factory {
