@@ -85,95 +85,104 @@ public class Lexer {
 	private void lexNumber() {
 		int line = this.line;
 		int startAtCol = this.col;
-		Token.TokenType numberKind;
+		Token.TokenType numberType;
 		String numberStr;
 
 		if (currentChar() != '0') {
-			numberKind = Token.TokenType.DecNumber;
+			numberType = Token.TokenType.DecNumber;
 			numberStr = scanFullString(decDigits);
 		}
 		else {
 			switch (peekOneChar()) {
 				case 'b': case 'B': {
 					nextChar(); nextChar();
-					numberKind = Token.TokenType.BinNumber;
+					numberType = Token.TokenType.BinNumber;
 					numberStr = "0b" + scanFullString(binDigits);
 					break;
 				}
 				case 'o': case 'O': {
 					nextChar(); nextChar();
-					numberKind = Token.TokenType.OctNumber;
+					numberType = Token.TokenType.OctNumber;
 					numberStr = "0o" + scanFullString(octDigits);
 					break;
 				}
 				case 'x': case 'X': {
 					nextChar(); nextChar();
-					numberKind = Token.TokenType.HexNumber;
+					numberType = Token.TokenType.HexNumber;
 					numberStr = "0x" + scanFullString(hexDigits);
 					break;
 				}
 				default: {
-					numberKind = Token.TokenType.DecNumber;
+					numberType = Token.TokenType.DecNumber;
 					numberStr = scanFullString(decDigits);
 				}
 			}
 		}
 
 		if (currentChar() == '.') {
-			if (numberKind != Token.TokenType.DecNumber) {
+			if (numberType != Token.TokenType.DecNumber) {
 				throw new ParseException("Only decimal floating numbers are allowed",
 						new MetaData(line, this.line, startAtCol, this.col));
 			}
 			nextChar();
 			numberStr = numberStr + '.' + scanFullString(decDigits);
-			numberKind = numberStr.length() <= 9 ? Token.TokenType.FloatNumber : Token.TokenType.DoubleNumber;
+			numberType = numberStr.length() <= 9 ? Token.TokenType.FloatNumber : Token.TokenType.DoubleNumber;
 		}
 
 		switch (currentChar()) {
 			case 'f': case 'F': {
-				if (!Token.isDecimal(numberKind)) {
+				if (!Token.isDecimal(numberType)) {
 					throw new ParseException("Only decimal floating numbers are allowed",
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenType.FloatNumber;
+				numberType = Token.TokenType.FloatNumber;
 				break;
 			}
 			case 'd': case 'D': {
-				if (!Token.isDecimal(numberKind)) {
+				if (!Token.isDecimal(numberType)) {
 					throw new ParseException("Only decimal floating numbers are allowed",
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenType.DoubleNumber;
+				numberType = Token.TokenType.DoubleNumber;
 				break;
 			}
 			case 'm': case 'M': {
-				if (!Token.isIntegral(numberKind)) {
+				if (!Token.isDecimal(numberType)) {
+					throw new ParseException("'m' or 'M' is used for big decimals",
+							new MetaData(line, this.line, startAtCol, this.col));
+				}
+				nextChar();
+				numberType = Token.TokenType.BigDec;
+				break;
+			}
+			case 'n': case 'N': {
+				if (!Token.isIntegral(numberType)) {
 					throw new ParseException("'m' or 'M' is used for big integers",
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenType.BigInteger;
+				numberType = Token.TokenType.BigInt;
 				break;
 			}
-			case 'n': case 'N': {
-				if (!Token.isIntegral(numberKind)) {
-					throw new ParseException("'m' or 'M' is used for long integers",
+			case 'l': case 'L': {
+				if (!Token.isIntegral(numberType)) {
+					throw new ParseException("'l' or 'L' is only used for long integers",
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenType.LongInteger;
+				numberType = Token.TokenType.LongInteger;
 				break;
 			}
 		}
 
 		if (! tokenDelimiters.contains(Character.toString(currentChar())) ) {
-			throw new ParseException("Unexpected character",
+			throw new ParseException("Unexpected character " + currentChar(),
 					new MetaData(this.line, this.line, this.col, this.col+1));
 		}
 
-		tokenBuffer.add(new Token(numberKind, numberStr,line, this.line, startAtCol, this.col));
+		tokenBuffer.add(new Token(numberType, numberStr,line, this.line, startAtCol, this.col));
 	}
 
 	@NotNull

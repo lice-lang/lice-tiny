@@ -71,8 +71,8 @@ public class LexNumberTest {
 	}
 
 	@Test(timeout = 100)
-	public void testLexLongNumber() {
-		String srcCode = "123N";
+	public void testLexLongInteger() {
+		String srcCode = "123L";
 		Lexer l = new Lexer(srcCode);
 		assertTrue(l.currentToken().getKind() == Token.TokenType.LongInteger);
 		assertTrue(l.currentToken().getStrValue().equals("123"));
@@ -80,11 +80,29 @@ public class LexNumberTest {
 	}
 
 	@Test(timeout = 100)
-	public void testLexBigNumber() {
+	public void testLexBigInt() {
+		String srcCode = "123N";
+		Lexer l = new Lexer(srcCode);
+		assertTrue(l.currentToken().getKind() == Token.TokenType.BigInt);
+		assertTrue(l.currentToken().getStrValue().equals("123"));
+		assertTrue(l.peekOneToken().getKind() == Token.TokenType.EOI);
+	}
+
+	@Test(timeout = 100)
+	public void testLexBigDec1() {
 		String srcCode = "123M";
 		Lexer l = new Lexer(srcCode);
-		assertTrue(l.currentToken().getKind() == Token.TokenType.BigInteger);
+		assertTrue(l.currentToken().getKind() == Token.TokenType.BigDec);
 		assertTrue(l.currentToken().getStrValue().equals("123"));
+		assertTrue(l.peekOneToken().getKind() == Token.TokenType.EOI);
+	}
+
+	@Test(timeout = 100)
+	public void testLexBigDec2() {
+		String srcCode = "123.456012M";
+		Lexer l = new Lexer(srcCode);
+		assertTrue(l.currentToken().getKind() == Token.TokenType.BigDec);
+		assertTrue(l.currentToken().getStrValue().equals("123.456012"));
 		assertTrue(l.peekOneToken().getKind() == Token.TokenType.EOI);
 	}
 
