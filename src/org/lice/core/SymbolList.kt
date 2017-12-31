@@ -10,7 +10,6 @@ import org.lice.lang.Echoer
 import org.lice.model.*
 import org.lice.model.MetaData.Factory.EmptyMetaData
 import org.lice.util.*
-import java.util.function.Consumer
 
 class SymbolList
 @JvmOverloads
@@ -92,10 +91,15 @@ constructor(init: Boolean = true) {
 	fun extractLiceVariable(name: String): Any? = (getVariable(name) as Node).eval()
 
 	companion object {
-		@JvmStatic
-		fun with(init: Consumer<SymbolList>) = SymbolList().also { init.accept(it) }
-
-		@JvmStatic
-		fun with(init: SymbolList.() -> Unit) = SymbolList().also { init(it) }
+		val preludeSymbols by lazy {
+			listOf(
+					FunctionHolders::class.java,
+					FunctionMangledHolder::class.java,
+					FunctionDefinedMangledHolder::class.java,
+					FunctionWithMetaHolders::class.java
+			)
+					.flatMap { it.declaredMethods.toList() }
+					.map { it.name }
+		}
 	}
 }
