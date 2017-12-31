@@ -2,24 +2,23 @@ package org.lice.parse2;
 
 import org.jetbrains.annotations.NotNull;
 import org.lice.model.MetaData;
+import org.lice.util.ParseException;
 
 import java.util.ArrayList;
 
 public class Lexer {
 	private static final String upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static final String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
-	private static final String commonSymbols = "!@#$%^&*_=:<>.?/\\+-*/%[]{}|";
-	private static final String binNumbers = "01";
-	private static final String octNumbers = "01234567";
-	private static final String decNumbers = "0123456789";
-	private static final String hexNumbers = "0123456789ABCDEF";
+	private static final String commonSymbols = "!@#$%^&*_=:<>.?/\\+-*%[]{}|";
+	private static final String binDigits = "01";
+	private static final String octDigits = "01234567";
+	private static final String decDigits = "0123456789";
+	private static final String hexDigits = "0123456789ABCDEF";
 	private static final String blanks = " \f\n\t\r,";
 	private static final String lispSymbols = "()";
-	private static final String tokenDelimiters = blanks + lispSymbols + "\0";
-
-	private static final String firstIdButNotNumberChars =
-			upperCaseLetters + lowerCaseLetters + commonSymbols;
-	private static final String idChars = firstIdButNotNumberChars + decNumbers;
+	private static final String tokenDelimiters = blanks + lispSymbols + ";\0";
+	private static final String firstIdChars = upperCaseLetters + lowerCaseLetters + commonSymbols;
+	private static final String idChars = firstIdChars + decDigits;
 
 	public Lexer(String sourceCode) {
 		this.sourceCode = sourceCode.toCharArray();
@@ -47,11 +46,11 @@ public class Lexer {
 		this.tokenBuffer = new ArrayList<Token>();
 
 		while ( currentChar() != '\0' ) {
-			if ( firstIdButNotNumberChars.contains(Character.toString(currentChar())) ) {
+			if ( firstIdChars.contains(Character.toString(currentChar())) ) {
 				lexIdentifier();
 			}
-			else if ( decNumbers.contains(Character.toString(currentChar())) ) {
-				lexNumberOrIdentifier();
+			else if ( decDigits.contains(Character.toString(currentChar())) ) {
+				lexNumber();
 			}
 			else if ( lispSymbols.contains(Character.toString(currentChar())) ) {
 				lexSingleCharToken();
@@ -59,12 +58,15 @@ public class Lexer {
 			else if ( currentChar() == '"' ) {
 				lexString();
 			}
+			else if ( currentChar() == ';' ) {
+				skipComment();
+			}
 			else if ( blanks.contains(Character.toString(currentChar())) ) {
 				nextChar();
 			}
 			else {
-				throw new LexException(new MetaData(this.line, this.line, this.col, this.col+1),
-						"Unrecognized character " + Character.toString(currentChar()));
+				throw new ParseException("Unknown character " + Character.toString(currentChar()),
+						new MetaData(this.line, this.line, this.col, this.col+1));
 			}
 		}
 		tokenBuffer.add(new Token(Token.TokenKind.EOI, "",
@@ -80,44 +82,98 @@ public class Lexer {
 				this.line, this.line, startAtCol, this.col));
 	}
 
-	private void lexNumberOrIdentifier() {
+	private void lexNumber() {
 		int line = this.line;
 		int startAtCol = this.col;
-
+		Token.TokenKind numberKind;
 		String numberStr;
+
 		if (currentChar() != '0') {
-			numberStr = scanFullString(decNumbers);
+			numberKind = Token.TokenKind.DecNumber;
+			numberStr = scanFullString(decDigits);
 		}
 		else {
 			switch (peekOneChar()) {
 				case 'b': case 'B': {
 					nextChar(); nextChar();
-					numberStr = "0b" + scanFullString(binNumbers);
+					numberKind = Token.TokenKind.BinNumber;
+					numberStr = "0b" + scanFullString(binDigits);
 					break;
 				}
 				case 'o': case 'O': {
 					nextChar(); nextChar();
-					numberStr = "0o" + scanFullString(octNumbers);
+					numberKind = Token.TokenKind.OctNumber;
+					numberStr = "0o" + scanFullString(octDigits);
 					break;
 				}
 				case 'x': case 'X': {
 					nextChar(); nextChar();
-					numberStr = "0x" + scanFullString(hexNumbers);
+					numberKind = Token.TokenKind.HexNumber;
+					numberStr = "0x" + scanFullString(hexDigits);
 					break;
 				}
 				default: {
-					numberStr = scanFullString(decNumbers);
+					numberKind = Token.TokenKind.DecNumber;
+					numberStr = scanFullString(decDigits);
 				}
 			}
 		}
 
-		if ( !tokenDelimiters.contains(Character.toString(currentChar())) ) {
-			String fullIdStr = numberStr + scanFullString(idChars);
-			tokenBuffer.add(new Token(Token.TokenKind.Identifier, fullIdStr, line, line, startAtCol, this.col));
+		if (currentChar() == '.') {
+			if (numberKind != Token.TokenKind.DecNumber) {
+				throw new ParseException("Only decimal floating numbers are allowed",
+						new MetaData(line, this.line, startAtCol, this.col));
+			}
+			nextChar();
+			numberStr = numberStr + '.' + scanFullString(decDigits);
+			numberKind = numberStr.length() <= 9 ? Token.TokenKind.FloatNumber : Token.TokenKind.DoubleNumber;
 		}
-		else {
-			tokenBuffer.add(new Token(Token.TokenKind.NumericLiteral, numberStr, line, line, startAtCol, this.col));
+
+		switch (currentChar()) {
+			case 'f': case 'F': {
+				if (!Token.isDecimal(numberKind)) {
+					throw new ParseException("Only decimal floating numbers are allowed",
+							new MetaData(line, this.line, startAtCol, this.col));
+				}
+				nextChar();
+				numberKind = Token.TokenKind.FloatNumber;
+				break;
+			}
+			case 'd': case 'D': {
+				if (!Token.isDecimal(numberKind)) {
+					throw new ParseException("Only decimal floating numbers are allowed",
+							new MetaData(line, this.line, startAtCol, this.col));
+				}
+				nextChar();
+				numberKind = Token.TokenKind.DoubleNumber;
+				break;
+			}
+			case 'm': case 'M': {
+				if (!Token.isIntegral(numberKind)) {
+					throw new ParseException("'m' or 'M' is used for big integers",
+							new MetaData(line, this.line, startAtCol, this.col));
+				}
+				nextChar();
+				numberKind = Token.TokenKind.BigNumber;
+				break;
+			}
+			case 'n': case 'N': {
+				if (!Token.isIntegral(numberKind)) {
+					throw new ParseException("'m' or 'M' is used for long integers",
+							new MetaData(line, this.line, startAtCol, this.col));
+				}
+				nextChar();
+				numberKind = Token.TokenKind.LongNumber;
+				break;
+			}
 		}
+
+		if (! tokenDelimiters.contains(Character.toString(currentChar())) ) {
+			throw new ParseException("Unexpected character",
+					new MetaData(this.line, this.line, this.col, this.col+1));
+		}
+
+		tokenBuffer.add(new Token(numberKind, numberStr,line, this.line, startAtCol, this.col));
 	}
 
 	@NotNull
@@ -157,8 +213,8 @@ public class Lexer {
 					case '\\': builder.append('\\'); break;
 					case '"':  builder.append('\"'); break;
 					default:
-						throw new LexException(new MetaData(this.line, this.line, this.col, this.col+2),
-								"Illegal conversion sequence \\" + peekOneChar());
+						throw new ParseException("Illegal conversion sequence \\" + peekOneChar(),
+								new MetaData(this.line, this.line, this.col, this.col+2));
 				}
 				nextChar();
 				nextChar();
@@ -166,14 +222,19 @@ public class Lexer {
 		}
 
 		if (currentChar() == '\0') {
-			throw new LexException(new MetaData(this.line, this.line, this.col, this.col+1),
-					"Unexpected EndOfInput.");
+			throw new ParseException("Unexpected EndOfInput.",
+					new MetaData(this.line, this.line, this.col, this.col+1));
 		}
 		nextChar();
 
 		this.tokenBuffer.add(
 				new Token(Token.TokenKind.StringLiteral, builder.toString(),
 							atLine, this.line, startAtCol, this.col));
+	}
+
+	private void skipComment() {
+		assert currentChar() == ';';
+		while (currentChar() != '\n' && currentChar() != '\0') nextChar();
 	}
 
 	private char currentChar() {
@@ -195,7 +256,7 @@ public class Lexer {
 	}
 
 	private void nextChar() {
-		if (sourceCode[charIndex] == '\n') {
+		if (currentChar() == '\n') {
 			line++;
 			col = 1;
 		}
@@ -207,7 +268,6 @@ public class Lexer {
 
 	private char[] sourceCode;
 	private int line, col, charIndex;
-
 	private ArrayList<Token> tokenBuffer;
 	private int currentTokenIndex;
 }

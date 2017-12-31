@@ -4,7 +4,14 @@ import org.lice.model.MetaData;
 
 public class Token {
 	public enum TokenKind {
-		NumericLiteral,
+		BinNumber,
+		OctNumber,
+		DecNumber,
+		HexNumber,
+		LongNumber,
+		BigNumber,
+		FloatNumber,
+		DoubleNumber,
 		StringLiteral,
 		Identifier,
 		LispKwd,
@@ -24,4 +31,23 @@ public class Token {
 	private final TokenKind kind;
 	private final String strValue;
 	private final MetaData metaData;
+
+	public static boolean isIntegral(TokenKind kind) {
+		return kind == TokenKind.BinNumber
+				|| kind == TokenKind.OctNumber
+				|| kind == TokenKind.DecNumber
+				|| kind == TokenKind.HexNumber
+				|| kind == TokenKind.LongNumber;
+	}
+
+	public static boolean isDecimal(TokenKind kind) {
+		return kind == TokenKind.DecNumber
+				|| kind == TokenKind.FloatNumber
+				|| kind == TokenKind.DoubleNumber;
+	}
+
+	public static boolean isFloating(TokenKind kind) {
+		return kind == TokenKind.FloatNumber
+				|| kind == TokenKind.DoubleNumber;
+	}
 }
