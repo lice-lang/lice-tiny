@@ -3,13 +3,13 @@ package org.lice.parse2;
 import org.lice.model.MetaData;
 
 public class Token {
-	public enum TokenKind {
+	public enum TokenType {
 		BinNumber,
 		OctNumber,
 		DecNumber,
 		HexNumber,
-		LongNumber,
-		BigNumber,
+		LongInteger,
+		BigInteger,
 		FloatNumber,
 		DoubleNumber,
 		StringLiteral,
@@ -18,36 +18,36 @@ public class Token {
 		EOI
 	}
 
-	Token(TokenKind kind, String strValue, int beginLineNumber, int endLineNumber, int beginIndex, int endIndex) {
+	Token(TokenType kind, String strValue, int beginLineNumber, int endLineNumber, int beginIndex, int endIndex) {
 		this.kind = kind;
 		this.strValue = strValue;
 		this.metaData = new MetaData(beginLineNumber, endLineNumber, beginIndex, endIndex);
 	}
 
-	public TokenKind getKind() { return kind; }
+	public TokenType getKind() { return kind; }
 	public String getStrValue() { return this.strValue; }
 	public MetaData getMetaData() {  return this.metaData; }
 
-	private final TokenKind kind;
+	private final TokenType kind;
 	private final String strValue;
 	private final MetaData metaData;
 
-	public static boolean isIntegral(TokenKind kind) {
-		return kind == TokenKind.BinNumber
-				|| kind == TokenKind.OctNumber
-				|| kind == TokenKind.DecNumber
-				|| kind == TokenKind.HexNumber
-				|| kind == TokenKind.LongNumber;
+	public static boolean isIntegral(TokenType kind) {
+		return kind == TokenType.BinNumber
+				|| kind == TokenType.OctNumber
+				|| kind == TokenType.DecNumber
+				|| kind == TokenType.HexNumber
+				|| kind == TokenType.LongInteger;
 	}
 
-	public static boolean isDecimal(TokenKind kind) {
-		return kind == TokenKind.DecNumber
-				|| kind == TokenKind.FloatNumber
-				|| kind == TokenKind.DoubleNumber;
+	public static boolean isDecimal(TokenType kind) {
+		return kind == TokenType.DecNumber
+				|| kind == TokenType.FloatNumber
+				|| kind == TokenType.DoubleNumber;
 	}
 
-	public static boolean isFloating(TokenKind kind) {
-		return kind == TokenKind.FloatNumber
-				|| kind == TokenKind.DoubleNumber;
+	public static boolean isFloating(TokenType kind) {
+		return kind == TokenType.FloatNumber
+				|| kind == TokenType.DoubleNumber;
 	}
 }

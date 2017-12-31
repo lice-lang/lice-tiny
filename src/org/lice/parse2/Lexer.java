@@ -69,7 +69,7 @@ public class Lexer {
 						new MetaData(this.line, this.line, this.col, this.col+1));
 			}
 		}
-		tokenBuffer.add(new Token(Token.TokenKind.EOI, "",
+		tokenBuffer.add(new Token(Token.TokenType.EOI, "",
 				this.line, this.line, this.col, this.col+1));
 		this.currentTokenIndex = 0;
 	}
@@ -78,55 +78,55 @@ public class Lexer {
 		int line = this.line;
 		int startAtCol = this.col;
 		String str = scanFullString(idChars);
-		this.tokenBuffer.add(new Token(Token.TokenKind.Identifier, str,
+		this.tokenBuffer.add(new Token(Token.TokenType.Identifier, str,
 				this.line, this.line, startAtCol, this.col));
 	}
 
 	private void lexNumber() {
 		int line = this.line;
 		int startAtCol = this.col;
-		Token.TokenKind numberKind;
+		Token.TokenType numberKind;
 		String numberStr;
 
 		if (currentChar() != '0') {
-			numberKind = Token.TokenKind.DecNumber;
+			numberKind = Token.TokenType.DecNumber;
 			numberStr = scanFullString(decDigits);
 		}
 		else {
 			switch (peekOneChar()) {
 				case 'b': case 'B': {
 					nextChar(); nextChar();
-					numberKind = Token.TokenKind.BinNumber;
+					numberKind = Token.TokenType.BinNumber;
 					numberStr = "0b" + scanFullString(binDigits);
 					break;
 				}
 				case 'o': case 'O': {
 					nextChar(); nextChar();
-					numberKind = Token.TokenKind.OctNumber;
+					numberKind = Token.TokenType.OctNumber;
 					numberStr = "0o" + scanFullString(octDigits);
 					break;
 				}
 				case 'x': case 'X': {
 					nextChar(); nextChar();
-					numberKind = Token.TokenKind.HexNumber;
+					numberKind = Token.TokenType.HexNumber;
 					numberStr = "0x" + scanFullString(hexDigits);
 					break;
 				}
 				default: {
-					numberKind = Token.TokenKind.DecNumber;
+					numberKind = Token.TokenType.DecNumber;
 					numberStr = scanFullString(decDigits);
 				}
 			}
 		}
 
 		if (currentChar() == '.') {
-			if (numberKind != Token.TokenKind.DecNumber) {
+			if (numberKind != Token.TokenType.DecNumber) {
 				throw new ParseException("Only decimal floating numbers are allowed",
 						new MetaData(line, this.line, startAtCol, this.col));
 			}
 			nextChar();
 			numberStr = numberStr + '.' + scanFullString(decDigits);
-			numberKind = numberStr.length() <= 9 ? Token.TokenKind.FloatNumber : Token.TokenKind.DoubleNumber;
+			numberKind = numberStr.length() <= 9 ? Token.TokenType.FloatNumber : Token.TokenType.DoubleNumber;
 		}
 
 		switch (currentChar()) {
@@ -136,7 +136,7 @@ public class Lexer {
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenKind.FloatNumber;
+				numberKind = Token.TokenType.FloatNumber;
 				break;
 			}
 			case 'd': case 'D': {
@@ -145,7 +145,7 @@ public class Lexer {
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenKind.DoubleNumber;
+				numberKind = Token.TokenType.DoubleNumber;
 				break;
 			}
 			case 'm': case 'M': {
@@ -154,7 +154,7 @@ public class Lexer {
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenKind.BigNumber;
+				numberKind = Token.TokenType.BigInteger;
 				break;
 			}
 			case 'n': case 'N': {
@@ -163,7 +163,7 @@ public class Lexer {
 							new MetaData(line, this.line, startAtCol, this.col));
 				}
 				nextChar();
-				numberKind = Token.TokenKind.LongNumber;
+				numberKind = Token.TokenType.LongInteger;
 				break;
 			}
 		}
@@ -188,7 +188,7 @@ public class Lexer {
 
 	private void lexSingleCharToken() {
 		this.tokenBuffer.add(
-				new Token(Token.TokenKind.LispKwd, Character.toString(currentChar()),
+				new Token(Token.TokenType.LispKwd, Character.toString(currentChar()),
 						this.line, this.line, this.col, this.col+1));
 		nextChar();
 	}
@@ -228,7 +228,7 @@ public class Lexer {
 		nextChar();
 
 		this.tokenBuffer.add(
-				new Token(Token.TokenKind.StringLiteral, builder.toString(),
+				new Token(Token.TokenType.StringLiteral, builder.toString(),
 							atLine, this.line, startAtCol, this.col));
 	}
 

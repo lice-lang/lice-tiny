@@ -9,14 +9,14 @@ public class LexCommentTest {
 	public void testLexComment() {
 		String src = "; Simply comments";
 		Lexer l = new Lexer(src);
-		assertTrue(l.currentToken().getKind() == Token.TokenKind.EOI);
+		assertTrue(l.currentToken().getKind() == Token.TokenType.EOI);
 	}
 
 	@Test(timeout = 100)
 	public void testLexComment2() {
 		String src = "; Simply comments\n@dentifier";
 		Lexer l = new Lexer(src);
-		assertTrue(l.currentToken().getKind() == Token.TokenKind.Identifier);
-		assertTrue(l.peekOneToken().getKind() == Token.TokenKind.EOI);
+		assertTrue(l.currentToken().getKind() == Token.TokenType.Identifier);
+		assertTrue(l.peekOneToken().getKind() == Token.TokenType.EOI);
 	}
 }
