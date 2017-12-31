@@ -36,16 +36,13 @@ constructor(init: Boolean = true) {
 		bindMethodsOf(FunctionHolders(this))
 		val definedMangledHolder = FunctionDefinedMangledHolder(this)
 		definedMangledHolder.javaClass.declaredMethods.forEach { method ->
-			defineFunction(method.name.replace('$', '>')) { meta, list ->
+			defineFunction(method.name.mangleA()) { meta, list ->
 				cast(runReflection { method.invoke(definedMangledHolder, meta, list) })
 			}
 		}
 		val mangledHolder = FunctionMangledHolder(this)
 		mangledHolder.javaClass.declaredMethods.forEach { method ->
-			provideFunctionWithMeta(method.name
-					.replace('$', '>')
-					.replace('&', '<')
-					.replace('_', '/')) { meta, list ->
+			provideFunctionWithMeta(method.name.mangleB()) { meta, list ->
 				runReflection { method.invoke(mangledHolder, meta, list) }
 			}
 		}
@@ -93,13 +90,14 @@ constructor(init: Boolean = true) {
 	companion object {
 		val preludeSymbols by lazy {
 			listOf(
-					FunctionHolders::class.java,
-					FunctionMangledHolder::class.java,
-					FunctionDefinedMangledHolder::class.java,
-					FunctionWithMetaHolders::class.java
-			)
-					.flatMap { it.declaredMethods.toList() }
-					.map { it.name }
+					FunctionHolders::class.java.declaredMethods.map { it.name },
+					FunctionDefinedMangledHolder::class.java.declaredMethods.map { it.name.mangleA() },
+					FunctionMangledHolder::class.java.declaredMethods.map { it.name.mangleB() },
+					FunctionWithMetaHolders::class.java.declaredMethods.map { it.name }
+			).flatMap { it }
 		}
+
+		private fun String.mangleA() = replace('$', '>')
+		private fun String.mangleB() = replace('$', '>').replace('&', '<').replace('_', '/')
 	}
 }
