@@ -9,14 +9,15 @@ public class LexCommentTest {
 	public void testLexComment() {
 		String src = "; Simply comments";
 		Lexer l = new Lexer(src);
-		assertEquals(l.currentToken().getType(), Token.TokenType.EOI);
+		assertEquals(Token.TokenType.EOI, l.currentToken().getType());
 	}
 
 	@Test(timeout = 100)
 	public void testLexComment2() {
 		String src = "; Simply comments\n@dentifier";
 		Lexer l = new Lexer(src);
-		assertEquals(l.currentToken().getType(), Token.TokenType.Identifier);
-		assertEquals(l.peekOneToken().getType(), Token.TokenType.EOI);
+		assertEquals(Token.TokenType.Identifier, l.currentToken().getType());
+		assertEquals("@dentifier", l.currentToken().getStrValue());
+		assertEquals(Token.TokenType.EOI, l.peekOneToken().getType());
 	}
 }

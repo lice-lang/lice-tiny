@@ -5,25 +5,25 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.lice.util.ParseException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class LexStringTest {
 	@Test(timeout = 100)
 	public void testLexString() {
 		String srcCode = "\"String\"";
 		Lexer l = new Lexer(srcCode);
-		assertEquals(l.currentToken().getType(), Token.TokenType.StringLiteral);
-		assertEquals(l.currentToken().getStrValue(), "String");
-		assertEquals(l.peekOneToken().getType(), Token.TokenType.EOI);
+		assertEquals(Token.TokenType.StringLiteral, l.currentToken().getType());
+		assertEquals("String", l.currentToken().getStrValue());
+		assertEquals(Token.TokenType.EOI, l.peekOneToken().getType());
 	}
 
 	@Test(timeout = 100)
 	public void testLexConversionSequence() {
 		String srcCode = "\"Str\\ning\"";
 		Lexer l = new Lexer(srcCode);
-		assertEquals(l.currentToken().getType(), Token.TokenType.StringLiteral);
-		assertEquals(l.currentToken().getStrValue(), "Str\ning");
-		assertEquals(l.peekOneToken().getType(), Token.TokenType.EOI);
+		assertEquals(Token.TokenType.StringLiteral, l.currentToken().getType());
+		assertEquals("Str\ning", l.currentToken().getStrValue());
+		assertEquals(Token.TokenType.EOI, l.peekOneToken().getType());
 	}
 
 	@Rule
