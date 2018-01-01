@@ -16,9 +16,9 @@ import org.lice.util.InterpretException.Factory.tooFewArgument
 import org.lice.util.InterpretException.Factory.typeMisMatch
 import org.lice.util.cast
 
+fun Any?.booleanValue() = this as? Boolean ?: (this != null)
 private fun lambdaNameGen() = "\t${++lambdaNameCounter}"
 private var lambdaNameCounter = -100
-fun Any?.booleanValue() = this as? Boolean ?: (this != null)
 
 private inline fun SymbolList.defFunc(
 		name: String,
