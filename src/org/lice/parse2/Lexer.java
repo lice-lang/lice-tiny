@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Lexer {
 	private static final String upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static final String lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
-	private static final String commonSymbols = "!@#$%^&*_=:<>.?/\\+-*%[]{}|";
+	private static final String commonSymbols = "!@#$%^&*_=:<>.?/\\+-*%[]{}|~";
 	private static final String binDigits = "01";
 	private static final String octDigits = "01234567";
 	private static final String decDigits = "0123456789";
