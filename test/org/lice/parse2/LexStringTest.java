@@ -12,18 +12,18 @@ public class LexStringTest {
 	public void testLexString() {
 		String srcCode = "\"String\"";
 		Lexer l = new Lexer(srcCode);
-		assertEquals(l.currentToken().getKind(), Token.TokenType.StringLiteral);
+		assertEquals(l.currentToken().getType(), Token.TokenType.StringLiteral);
 		assertEquals(l.currentToken().getStrValue(), "String");
-		assertEquals(l.peekOneToken().getKind(), Token.TokenType.EOI);
+		assertEquals(l.peekOneToken().getType(), Token.TokenType.EOI);
 	}
 
 	@Test(timeout = 100)
 	public void testLexConversionSequence() {
 		String srcCode = "\"Str\\ning\"";
 		Lexer l = new Lexer(srcCode);
-		assertEquals(l.currentToken().getKind(), Token.TokenType.StringLiteral);
+		assertEquals(l.currentToken().getType(), Token.TokenType.StringLiteral);
 		assertEquals(l.currentToken().getStrValue(), "Str\ning");
-		assertEquals(l.peekOneToken().getKind(), Token.TokenType.EOI);
+		assertEquals(l.peekOneToken().getType(), Token.TokenType.EOI);
 	}
 
 	@Rule

@@ -20,16 +20,16 @@ public class Token {
 	}
 
 	Token(TokenType kind, String strValue, int beginLineNumber, int endLineNumber, int beginIndex, int endIndex) {
-		this.kind = kind;
+		this.type = kind;
 		this.strValue = strValue;
 		this.metaData = new MetaData(beginLineNumber, endLineNumber, beginIndex, endIndex);
 	}
 
-	public TokenType getKind() { return kind; }
+	public TokenType getType() { return type; }
 	public String getStrValue() { return this.strValue; }
 	public MetaData getMetaData() {  return this.metaData; }
 
-	private final TokenType kind;
+	private final TokenType type;
 	private final String strValue;
 	private final MetaData metaData;
 
