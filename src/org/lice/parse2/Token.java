@@ -19,8 +19,8 @@ public class Token {
 		EOI
 	}
 
-	Token(TokenType kind, String strValue, int beginLineNumber, int endLineNumber, int beginIndex, int endIndex) {
-		this.type = kind;
+	Token(TokenType type, String strValue, int beginLineNumber, int endLineNumber, int beginIndex, int endIndex) {
+		this.type = type;
 		this.strValue = strValue;
 		this.metaData = new MetaData(beginLineNumber, endLineNumber, beginIndex, endIndex);
 	}
@@ -33,22 +33,22 @@ public class Token {
 	private final String strValue;
 	private final MetaData metaData;
 
-	public static boolean isIntegral(TokenType kind) {
-		return kind == TokenType.BinNumber
-				|| kind == TokenType.OctNumber
-				|| kind == TokenType.DecNumber
-				|| kind == TokenType.HexNumber
-				|| kind == TokenType.LongInteger;
+	public static boolean isIntegral(TokenType type) {
+		return type == TokenType.BinNumber
+				|| type == TokenType.OctNumber
+				|| type == TokenType.DecNumber
+				|| type == TokenType.HexNumber
+				|| type == TokenType.LongInteger;
 	}
 
-	public static boolean isDecimal(TokenType kind) {
-		return kind == TokenType.DecNumber
-				|| kind == TokenType.FloatNumber
-				|| kind == TokenType.DoubleNumber;
+	public static boolean isDecimal(TokenType type) {
+		return type == TokenType.DecNumber
+				|| type == TokenType.FloatNumber
+				|| type == TokenType.DoubleNumber;
 	}
 
-	public static boolean isFloating(TokenType kind) {
-		return kind == TokenType.FloatNumber
-				|| kind == TokenType.DoubleNumber;
+	public static boolean isFloating(TokenType type) {
+		return type == TokenType.FloatNumber
+				|| type == TokenType.DoubleNumber;
 	}
 }
