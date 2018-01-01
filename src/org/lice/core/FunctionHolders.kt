@@ -7,7 +7,7 @@ import org.lice.parse.*
 import org.lice.util.cast
 import java.io.File
 
-class FunctionHolders(val symbolList: SymbolList) {
+class FunctionHolders(private val symbolList: SymbolList) {
 	fun `===`(it: List<Any?>) = (1 until it.size).all { i -> it[i] == it[i - 1] }
 	fun `!==`(it: List<Any?>) = (1 until it.size).none { i -> it[i] == it[i - 1] }
 	fun eval(ls: List<Any?>) = mapAst(buildNode(ls.first().toString()), symbolList = symbolList).eval()

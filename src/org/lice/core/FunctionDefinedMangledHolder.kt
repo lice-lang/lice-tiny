@@ -8,7 +8,7 @@ import org.lice.util.*
  * `$` in the function names will be replaced with `>`.
  * @author ice1000
  */
-class FunctionDefinedMangledHolder(val symbolList: SymbolList) {
+class FunctionDefinedMangledHolder(private val symbolList: SymbolList) {
 	fun `def?`(metaData: MetaData, ls: List<Node>): Node {
 		val a = (ls.first() as? SymbolNode ?: InterpretException.notSymbol(metaData)).name
 		return ValueNode(symbolList.isVariableDefined(a), metaData)

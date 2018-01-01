@@ -6,7 +6,7 @@ import org.lice.util.*
 import java.lang.reflect.Modifier
 
 @Suppress("unused")
-class FunctionWithMetaHolders(val symbolList: SymbolList) {
+class FunctionWithMetaHolders(private val symbolList: SymbolList) {
 	fun `-`(meta: MetaData, list: List<Any?>) = when (list.size) {
 		0 -> 0
 		1 -> list.first()
