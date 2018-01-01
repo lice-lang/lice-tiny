@@ -8,6 +8,7 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
+apply plugin: 'java'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -18,8 +19,10 @@ repositories {
 
 sourceSets {
 	main.kotlin.srcDirs = ['src']
+	main.java.srcDirs = ['src']
 	main.resources.srcDirs = []
 	test.kotlin.srcDirs = ['test']
+	test.java.srcDirs = ['test']
 }
 
 configurations { library }
