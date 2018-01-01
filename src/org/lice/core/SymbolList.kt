@@ -88,12 +88,14 @@ constructor(init: Boolean = true) {
 	fun extractLiceVariable(name: String): Any? = (getVariable(name) as Node).eval()
 
 	companion object {
+		val preludeVariables = listOf("null", "true", "false")
 		val preludeSymbols by lazy {
 			listOf(
 					FunctionHolders::class.java.declaredMethods.map { it.name },
 					FunctionDefinedMangledHolder::class.java.declaredMethods.map { it.name.mangleA() },
 					FunctionMangledHolder::class.java.declaredMethods.map { it.name.mangleB() },
-					FunctionWithMetaHolders::class.java.declaredMethods.map { it.name }
+					FunctionWithMetaHolders::class.java.declaredMethods.map { it.name },
+					listOf("def", "defexpr", "deflazy", "lambda", "expr", "lazy")
 			).flatMap { it }
 		}
 
