@@ -145,15 +145,6 @@ class Lexer(sourceCode: String) {
 		return tokenStringBuilder.toString()
 	}
 
-	private fun scanFullString(allowedChars: CharRange): String {
-		val tokenStringBuilder = StringBuilder()
-		while (currentChar() in allowedChars) {
-			tokenStringBuilder.append(currentChar())
-			nextChar()
-		}
-		return tokenStringBuilder.toString()
-	}
-
 	private fun lexSingleCharToken() {
 		this.tokenBuffer.add(Token(Token.TokenType.LispKwd, Character.toString(currentChar()),
 				this.line, this.line, this.col, this.col + 1))
@@ -215,6 +206,7 @@ class Lexer(sourceCode: String) {
 		private const val lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz"
 		private const val commonSymbols = "<>[]+-*/%|!@#$%^&*_:=.?\\{}~"
 		private const val binDigits = "01"
+		private const val octDigits = "01234567"
 		private const val decDigits = "0123456789"
 		private const val hexDigits = "0123456789ABCDEF"
 		private const val blanks = " \u000C\n\t\r,"
@@ -222,6 +214,5 @@ class Lexer(sourceCode: String) {
 		private const val tokenDelimiters = blanks + lispSymbols + ";\u0000"
 		private const val firstIdChars = upperCaseLetters + lowerCaseLetters + commonSymbols
 		private const val idChars = firstIdChars + decDigits
-		private val octDigits = '0'..'7'
 	}
 }
