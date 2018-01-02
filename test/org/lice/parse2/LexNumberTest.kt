@@ -10,6 +10,7 @@ import org.junit.Assert.assertEquals
 class LexNumberTest {
 
 	@Rule
+	@JvmField
 	var thrown: ExpectedException = ExpectedException.none()
 
 	@Test(timeout = 100)

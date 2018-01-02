@@ -1,16 +1,16 @@
 package org.lice.parse2
 
 import org.intellij.lang.annotations.Language
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.lice.util.ParseException
 
-import org.junit.Assert.*
-
 class LexStringTest {
 
 	@Rule
+	@JvmField
 	var thrown: ExpectedException = ExpectedException.none()
 
 	@Test(timeout = 100)
