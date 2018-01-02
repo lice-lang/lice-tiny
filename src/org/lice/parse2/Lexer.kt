@@ -169,7 +169,7 @@ class Lexer(sourceCode: String) {
 					't' -> builder.append('\t')
 					'\\' -> builder.append('\\')
 					'"' -> builder.append('\"')
-					else -> throw ParseException("Illegal conversion sequence \\" + peekOneChar(),
+					else -> throw ParseException("Illegal conversion sequence \\${peekOneChar()}",
 							MetaData(this.line, this.line, this.col, this.col + 2))
 				}
 				nextChar()
@@ -181,7 +181,7 @@ class Lexer(sourceCode: String) {
 				MetaData(this.line, this.line, this.col, this.col + 1))
 		nextChar()
 
-		this.tokenBuffer.add(Token(Token.TokenType.StringLiteral, builder.toString(),
+		this.tokenBuffer.add(Token(Token.TokenType.StringLiteral, "$builder",
 				atLine, this.line, startAtCol, this.col))
 	}
 
