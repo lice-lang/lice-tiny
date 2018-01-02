@@ -1,11 +1,13 @@
 package org.lice.parse2
 
+import org.intellij.lang.annotations.Language
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class LexProgramTest {
 	@Test(timeout = 100)
 	fun test1() {
+		@Language("Lice")
 		val src = """
 			(def add a b (+ a b))
 			(add 12.45M 13.14M)
@@ -65,6 +67,7 @@ class LexProgramTest {
 
 	@Test(timeout = 100)
 	fun test2() {
+		@Language("Lice")
 		val src = """
 			(string-add "String" ; comments
 			"Liter
