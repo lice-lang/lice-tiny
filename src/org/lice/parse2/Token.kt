@@ -31,22 +31,19 @@ class Token constructor(
 		LispKwd,
 		EOI
 	}
-
-	companion object {
-
-		fun isIntegral(type: TokenType) =
-				type == TokenType.BinNumber
-						|| type == TokenType.OctNumber
-						|| type == TokenType.DecNumber
-						|| type == TokenType.HexNumber
-						|| type == TokenType.LongInteger
-
-		fun isDecimal(type: TokenType) =
-				type == TokenType.DecNumber
-						|| type == TokenType.FloatNumber
-						|| type == TokenType.DoubleNumber
-
-		fun isFloating(type: TokenType)
-				= type == TokenType.FloatNumber || type == TokenType.DoubleNumber
-	}
 }
+
+val Token.TokenType.isIntegral
+	get() = this == Token.TokenType.BinNumber
+			|| this == Token.TokenType.OctNumber
+			|| this == Token.TokenType.DecNumber
+			|| this == Token.TokenType.HexNumber
+			|| this == Token.TokenType.LongInteger
+
+val Token.TokenType.isDecimal
+	get() = this == Token.TokenType.DecNumber
+			|| this == Token.TokenType.FloatNumber
+			|| this == Token.TokenType.DoubleNumber
+
+val Token.TokenType.isFloating
+	get() = this == Token.TokenType.FloatNumber || this == Token.TokenType.DoubleNumber

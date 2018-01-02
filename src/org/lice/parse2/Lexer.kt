@@ -100,31 +100,31 @@ class Lexer(sourceCode: String) {
 
 		when (currentChar()) {
 			'f', 'F' -> {
-				if (!Token.isDecimal(numberType)) throw ParseException("Only decimal floating numbers are allowed",
+				if (!numberType.isDecimal) throw ParseException("Only decimal floating numbers are allowed",
 						MetaData(line, this.line, startAtCol, this.col))
 				nextChar()
 				numberType = Token.TokenType.FloatNumber
 			}
 			'd', 'D' -> {
-				if (!Token.isDecimal(numberType)) throw ParseException("Only decimal floating numbers are allowed",
+				if (!numberType.isDecimal) throw ParseException("Only decimal floating numbers are allowed",
 						MetaData(line, this.line, startAtCol, this.col))
 				nextChar()
 				numberType = Token.TokenType.DoubleNumber
 			}
 			'm', 'M' -> {
-				if (!Token.isDecimal(numberType)) throw ParseException("'m' or 'M' is used for big decimals",
+				if (!numberType.isDecimal) throw ParseException("'m' or 'M' is used for big decimals",
 						MetaData(line, this.line, startAtCol, this.col))
 				nextChar()
 				numberType = Token.TokenType.BigDec
 			}
 			'n', 'N' -> {
-				if (!Token.isIntegral(numberType)) throw ParseException("'m' or 'M' is used for big integers",
+				if (!numberType.isIntegral) throw ParseException("'m' or 'M' is used for big integers",
 						MetaData(line, this.line, startAtCol, this.col))
 				nextChar()
 				numberType = Token.TokenType.BigInt
 			}
 			'l', 'L' -> {
-				if (!Token.isIntegral(numberType)) throw ParseException("'l' or 'L' is only used for long integers",
+				if (!numberType.isIntegral) throw ParseException("'l' or 'L' is only used for long integers",
 						MetaData(line, this.line, startAtCol, this.col))
 				nextChar()
 				numberType = Token.TokenType.LongInteger
