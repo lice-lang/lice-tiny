@@ -33,7 +33,11 @@ dependencies {
 }
 
 jar {
-	manifest { attributes 'Main-Class': 'org.lice.repl.Main' }
+	manifest {
+		attributes 'Main-Class': 'org.lice.repl.Main'
+		attributes 'Implementation-Version': version
+		attributes 'Implementation-Title': "Lice v$version"
+	}
 	from { configurations.library.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
@@ -42,7 +46,11 @@ task fatJar(type: Jar) {
 	description 'Assembles a jar archive containing the main classes and all the dependencies.'
 	group 'build'
 	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-	manifest { attributes 'Main-Class': 'org.lice.repl.Main' }
+	manifest {
+		attributes 'Main-Class': 'org.lice.repl.Main'
+		attributes 'Implementation-Version': version
+		attributes 'Implementation-Title': "Lice v$version"
+	}
 	with jar
 }
 
