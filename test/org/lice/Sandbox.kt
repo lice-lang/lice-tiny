@@ -12,10 +12,6 @@ class Sandbox {
 	@Test
 	fun sandbox() {
 		Lice.run("""
-			(print (+ 1 2))
-			(print "
-")
-			(print (+ 2 3))
 """)
 	}
 }
