@@ -2,7 +2,7 @@ package org.lice.core
 
 import org.lice.lang.NumberOperator
 import org.lice.model.MetaData
-import org.lice.parse.*
+import org.lice.parse2.*
 import org.lice.util.InterpretException
 import org.lice.util.cast
 

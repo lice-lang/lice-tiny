@@ -7,7 +7,7 @@
 @file:JvmName("Parse")
 @file:JvmMultifileClass
 
-package org.lice.parse
+package org.lice.parse2
 
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -96,7 +96,7 @@ fun String.toBinInt(): Int {
 	return ret
 }
 
-fun String.toBigInt() = BigInteger(this.substring(0, length - 1).run {
+fun String.toBigInt() = BigInteger(this.run {
 	when {
 		isHexInt() -> toHexInt().toString()
 		isBinInt() -> toBinInt().toString()
@@ -105,7 +105,7 @@ fun String.toBigInt() = BigInteger(this.substring(0, length - 1).run {
 	}
 })
 
-fun String.toBigDec() = BigDecimal(this.substring(0, length - 1))
+fun String.toBigDec() = BigDecimal(this)
 
 fun String.toOctInt(): Int {
 	if (this[0] == '-') return -substring(1).toBinInt()

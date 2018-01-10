@@ -2,8 +2,9 @@ package org.lice
 
 import org.junit.Test
 import org.lice.core.SymbolList
-import org.lice.parse.buildNode
-import org.lice.parse.mapAst
+import org.lice.parse2.Lexer
+import org.lice.parse2.Parser
+import org.lice.parse2.Sema
 
 class Benchmark {
 	companion object {
@@ -77,11 +78,10 @@ $core))
 """
 	}
 
-	private val lice3 = mapAst(node = buildNode(code3))
-	private val lice = mapAst(node = buildNode(code))
-	private val lice2 = mapAst(node = buildNode(code2), symbolList = SymbolList().apply {
-		provideFunction("code") { java() }
-	})
+	private val lice3 = Parser.parseTokenStream(Lexer(code3)).accept(Sema())
+	private val lice = Parser.parseTokenStream(Lexer(code)).accept(Sema())
+	private val lice2 = Parser.parseTokenStream(Lexer(code2)).accept(Sema(
+			SymbolList().apply { provideFunction("code") { java() }} ))
 
 	@Test
 	fun benchmarkLice() {

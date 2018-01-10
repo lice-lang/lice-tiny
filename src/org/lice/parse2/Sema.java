@@ -6,6 +6,7 @@ public class Sema {
 	public Sema() {
 		symbolList = new SymbolList();
 	}
+	public Sema(SymbolList symbolList) { this.symbolList = symbolList; }
 
 	public SymbolList getSymbolList() { return symbolList; }
 

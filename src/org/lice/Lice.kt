@@ -18,14 +18,14 @@ import java.io.File
 object Lice {
 	@JvmOverloads
 	@JvmStatic
-	fun run(file: File, symbolList: SymbolList = SymbolList()) =
+	fun run(file: File) =
 			Main.interpret(file)
 
 	@JvmOverloads
 	@JvmStatic
 	fun run(code: String, symbolList: SymbolList = SymbolList()): Any? {
 		try {
-			return Parser.parseTokenStream(Lexer(code)).accept(Sema()).eval()
+			return Parser.parseTokenStream(Lexer(code)).accept(Sema(symbolList)).eval()
 		}
 		catch (e: ParseException) {
 			e.prettyPrint(code.split("\n"))
