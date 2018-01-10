@@ -7,7 +7,6 @@ class IntegratedTest {
 	@Test(timeout = 500)
 	fun Test1() {
 		val srcCode = """
-(|>
 (def fibonacci n
 	(if (== n 1)
 		(1)
@@ -21,7 +20,6 @@ class IntegratedTest {
 		(print ("
 "))
 		(-> i (+ i 1))))
-)
 """
 		Parser.parseTokenStream(Lexer(srcCode)).accept(Sema()).eval()
 	}
@@ -29,7 +27,6 @@ class IntegratedTest {
 	@Test(timeout = 500)
 	fun Test2() {
 		val srcCode = """
-(|>
 (print (+ 1 1) "\n")
 (print (- 10N 1.0) "\n")
 (print (/ 10.2M 5) "\n")
@@ -49,7 +46,6 @@ class IntegratedTest {
 
 (print (format "ass %s can", "we") "
 ")
-)
 """
 		Parser.parseTokenStream(Lexer(srcCode)).accept(Sema()).eval()
 	}
@@ -65,7 +61,6 @@ class IntegratedTest {
 	@Test(timeout = 500)
 	fun Test4() {
 		val srcCode = """
-(|>
 ; defining functions
 (def check
 		 (if (def? println)
@@ -118,7 +113,6 @@ class IntegratedTest {
 
 ; calling the extern function
 (equals 1 1)
-)
 """
 		Parser.parseTokenStream(Lexer(srcCode)).accept(Sema()).eval()
 	}

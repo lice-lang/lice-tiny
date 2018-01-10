@@ -19,8 +19,7 @@ public class ASTListNode extends ASTNode {
 		if (subNodes.size() > 0) {
 			ASTNode first = subNodes.get(0);
 			Node mapFirstResult = first.accept(sema);
-			if (mapFirstResult instanceof ValueNode
-				|| mapFirstResult instanceof ExpressionNode) {
+			if (mapFirstResult instanceof ValueNode) {
 				return mapFirstResult;
 			}
 			else {

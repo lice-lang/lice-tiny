@@ -3,7 +3,7 @@ package org.lice.parse2;
 import org.lice.core.SymbolList;
 
 public class Sema {
-	Sema() {
+	public Sema() {
 		symbolList = new SymbolList();
 	}
 

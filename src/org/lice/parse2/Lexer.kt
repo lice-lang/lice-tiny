@@ -34,8 +34,9 @@ class Lexer(sourceCode: String) {
 	private fun doSplitTokens() {
 		while (currentChar() != '\u0000') {
 			when {
-				currentChar() in firstIdChars -> lexIdentifier()
+				currentChar() == '-' -> disambiguateIdentifierOrNegative()
 				currentChar() in decDigits -> lexNumber()
+				currentChar() in firstIdChars -> lexIdentifier()
 				currentChar() in lispSymbols -> lexSingleCharToken()
 				currentChar() == '"' -> lexString()
 				currentChar() == ';' -> skipComment()
@@ -45,6 +46,11 @@ class Lexer(sourceCode: String) {
 		}
 		tokenBuffer.add(Token(Token.TokenType.EOI, "", this.line, this.line, this.col, this.col + 1))
 		this.currentTokenIndex = 0
+	}
+
+	private fun disambiguateIdentifierOrNegative() {
+		if (peekOneChar() in decDigits) lexNumber()
+		else lexIdentifier()
 	}
 
 	private fun lexIdentifier() {
@@ -57,8 +63,14 @@ class Lexer(sourceCode: String) {
 	private fun lexNumber() {
 		val line = this.line
 		val startAtCol = this.col
+		var isNegative = false
 		var numberType: Token.TokenType
 		var numberStr: String
+
+		if (currentChar() == '-') {
+			isNegative = true
+			nextChar()
+		}
 
 		if (currentChar() != '0') {
 			numberType = Token.TokenType.DecNumber
@@ -133,6 +145,10 @@ class Lexer(sourceCode: String) {
 
 		if (currentChar() !in tokenDelimiters) throw ParseException("Unexpected character ${currentChar()}",
 				MetaData(this.line, this.line, this.col, this.col + 1))
+
+		if (isNegative) {
+			numberStr = "-${numberStr}"
+		}
 		tokenBuffer.add(Token(numberType, numberStr, line, this.line, startAtCol, this.col))
 	}
 

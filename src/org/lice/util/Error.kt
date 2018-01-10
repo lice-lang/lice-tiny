@@ -12,7 +12,7 @@ package org.lice.util
 
 import org.lice.model.MetaData
 
-private fun exceptionPrettyPrint(string: String, meta: MetaData, cachedCodeLines: Array<String>) {
+private fun exceptionPrettyPrint(string: String, meta: MetaData, cachedCodeLines: List<String>) {
 	System.err.println("Error " + string)
 	if (meta.beginLine != -1)
 		System.err.print("At " + meta.beginLine)
@@ -35,13 +35,13 @@ private fun exceptionPrettyPrint(string: String, meta: MetaData, cachedCodeLines
 }
 
 class ParseException(private val string: String, private val meta: MetaData = MetaData()) : RuntimeException(string) {
-	fun prettyPrint(cachedCodeLines: Array<String>) {
+	fun prettyPrint(cachedCodeLines: List<String>) {
 		exceptionPrettyPrint(string, meta, cachedCodeLines)
 	}
 }
 
 class InterpretException(private val string: String, private val meta: MetaData = MetaData()) : RuntimeException(string) {
-	fun prettyPrint(cachedCodeLines: Array<String>) {
+	fun prettyPrint(cachedCodeLines: List<String>) {
 		exceptionPrettyPrint(string, meta, cachedCodeLines)
 	}
 

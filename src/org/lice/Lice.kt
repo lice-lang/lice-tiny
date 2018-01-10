@@ -6,20 +6,33 @@
  */
 package org.lice
 
-import org.lice.parse.buildNode
-import org.lice.parse.mapAst
 import org.lice.core.SymbolList
+import org.lice.parse2.Lexer
+import org.lice.parse2.Parser
+import org.lice.parse2.Sema
 import org.lice.repl.Main
+import org.lice.util.InterpretException
+import org.lice.util.ParseException
 import java.io.File
 
 object Lice {
 	@JvmOverloads
 	@JvmStatic
 	fun run(file: File, symbolList: SymbolList = SymbolList()) =
-			Main.interpret(file, symbolList)
+			Main.interpret(file)
 
 	@JvmOverloads
 	@JvmStatic
-	fun run(code: String, symbolList: SymbolList = SymbolList()) =
-			mapAst(node = buildNode(code), symbolList = symbolList).eval()
+	fun run(code: String, symbolList: SymbolList = SymbolList()): Any? {
+		try {
+			return Parser.parseTokenStream(Lexer(code)).accept(Sema()).eval()
+		}
+		catch (e: ParseException) {
+			e.prettyPrint(code.split("\n"))
+		}
+		catch (e: InterpretException) {
+			e.prettyPrint(code.split("\n"))
+		}
+		return null
+	}
 }
