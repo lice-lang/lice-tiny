@@ -11,7 +11,7 @@ public class Parser {
 		while (lexer.currentToken().getType()!= Token.TokenType.EOI) {
 			nodes.add(parseNode(lexer));
 		}
-		return new ASTListNode(new MetaData(), nodes);
+		return new ASTRootNode(nodes);
 	}
 
 	private static ASTNode parseNode(Lexer l) {
