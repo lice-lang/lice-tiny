@@ -33,29 +33,29 @@ fun String.isHexInt(isNegative: Boolean = false): Boolean {
 	}
 }
 
-fun String.isBigInt(isNegative: Boolean = false): Boolean {
-	if (!isNegative && '-' == this[0]) return substring(1).isBigInt(true)
-	return when {
-		length <= 1 -> false
-		'n' != this[length - 1].safeLower() -> false
-		else -> {
-			val a = substring(0..length - 2)
-			a.isInt() || a.isHexInt() || a.isBinInt() || a.isOctInt()
-		}
-	}
-}
-
-fun String.isBigDec(isNegative: Boolean = false): Boolean {
-	if (!isNegative && '-' == this[0]) return substring(1).isBigDec(true)
-	return when {
-		length <= 2 -> false
-		'm' != this[length - 1].safeLower() -> false
-		else -> {
-			val a = substring(0..length - 2)
-			1 >= a.count { '.' == it } && a.all { '.' == it || it.isDigit() }
-		}
-	}
-}
+//fun String.isBigInt(isNegative: Boolean = false): Boolean {
+//	if (!isNegative && '-' == this[0]) return substring(1).isBigInt(true)
+//	return when {
+//		length <= 1 -> false
+//		'n' != this[length - 1].safeLower() -> false
+//		else -> {
+//			val a = substring(0..length - 2)
+//			a.isInt() || a.isHexInt() || a.isBinInt() || a.isOctInt()
+//		}
+//	}
+//}
+//
+//fun String.isBigDec(isNegative: Boolean = false): Boolean {
+//	if (!isNegative && '-' == this[0]) return substring(1).isBigDec(true)
+//	return when {
+//		length <= 2 -> false
+//		'm' != this[length - 1].safeLower() -> false
+//		else -> {
+//			val a = substring(0..length - 2)
+//			1 >= a.count { '.' == it } && a.all { '.' == it || it.isDigit() }
+//		}
+//	}
+//}
 
 fun String.isBinInt(isNegative: Boolean = false): Boolean {
 	if (!isNegative && this[0] == '-') return substring(1).isBinInt(true)
