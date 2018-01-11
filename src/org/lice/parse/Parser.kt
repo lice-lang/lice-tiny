@@ -1,4 +1,4 @@
-package org.lice.parse2
+package org.lice.parse
 
 import org.lice.util.ParseException
 import java.util.*

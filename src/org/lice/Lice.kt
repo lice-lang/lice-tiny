@@ -7,7 +7,7 @@
 package org.lice
 
 import org.lice.core.SymbolList
-import org.lice.parse2.*
+import org.lice.parse.*
 import org.lice.repl.Main
 import org.lice.util.InterpretException
 import org.lice.util.ParseException

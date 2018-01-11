@@ -7,7 +7,7 @@
 @file:JvmName("Parse")
 @file:JvmMultifileClass
 
-package org.lice.parse2
+package org.lice.parse
 
 import java.math.BigDecimal
 import java.math.BigInteger

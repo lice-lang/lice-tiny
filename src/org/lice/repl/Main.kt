@@ -2,7 +2,7 @@ package org.lice.repl
 
 import org.lice.core.SymbolList
 import org.lice.lang.Echoer
-import org.lice.parse2.*
+import org.lice.parse.*
 import org.lice.util.InterpretException
 import org.lice.util.ParseException
 import java.io.File

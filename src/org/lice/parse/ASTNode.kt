@@ -1,4 +1,4 @@
-package org.lice.parse2
+package org.lice.parse
 
 import org.lice.core.SymbolList
 import org.lice.model.*

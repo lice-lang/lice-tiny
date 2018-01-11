@@ -3,7 +3,7 @@ package org.lice
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 import org.lice.core.SymbolList
-import org.lice.parse2.*
+import org.lice.parse.*
 
 class Benchmark {
 	companion object {

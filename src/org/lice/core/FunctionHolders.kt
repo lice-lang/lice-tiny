@@ -3,11 +3,10 @@
 package org.lice.core
 
 import org.lice.lang.Echoer
-import org.lice.parse2.Lexer
-import org.lice.parse2.Parser
-import org.lice.parse2.Sema
+import org.lice.parse.Lexer
+import org.lice.parse.Parser
+import org.lice.parse.Sema
 import org.lice.util.cast
-import java.io.File
 
 class FunctionHolders(private val symbolList: SymbolList) {
 	fun `===`(it: List<Any?>) = (1 until it.size).all { i -> it[i] == it[i - 1] }

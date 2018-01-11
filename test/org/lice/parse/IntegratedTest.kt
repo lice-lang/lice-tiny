@@ -1,4 +1,4 @@
-package org.lice.parse2
+package org.lice.parse
 
 import junit.framework.TestCase.assertEquals
 import org.junit.Test

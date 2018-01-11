@@ -1,4 +1,4 @@
-package org.lice.parse2
+package org.lice.parse
 
 import org.lice.model.MetaData
 import org.lice.util.ParseException
