@@ -60,14 +60,13 @@ constructor(init: Boolean = true) {
 			defineFunction(name) { meta, ls ->
 				val value = node(meta, ls.map { it.eval() })
 				if (value != null) ValueNode(value, meta)
-				else EmptyNode(meta)
+				else ValueNode(null, meta)
 			}
 
 	fun provideFunction(name: String, node: ProvidedFunc) =
 			defineFunction(name) { meta, ls ->
 				val value = node(ls.map { it.eval() })
-				if (value != null) ValueNode(value, meta)
-				else EmptyNode(meta)
+				if (value != null) ValueNode(value, meta) else ValueNode(null, meta)
 			}
 
 	fun defineVariable(name: String, node: Node) = variables.put(name, node)

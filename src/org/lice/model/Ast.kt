@@ -16,12 +16,13 @@ import org.lice.util.InterpretException.Factory.notFunction
 import org.lice.util.InterpretException.Factory.undefinedVariable
 import org.lice.util.className
 
-class MetaData(val beginLine: Int = -1, val endLine: Int = -1,
-								val beginIndex: Int = -1, val endIndex: Int = -1) {
-	val lineNumber: Int get() = beginLine
-
+class MetaData(
+		val beginLine: Int = -1,
+		val endLine: Int = -1,
+		val beginIndex: Int = -1,
+		val endIndex: Int = -1) {
 	companion object Factory {
-		val EmptyMetaData = MetaData(-1)
+		val EmptyMetaData = MetaData()
 	}
 }
 
@@ -55,9 +56,3 @@ class SymbolNode(private val symbolList: SymbolList, val name: String, override 
 
 	override fun toString() = "symbol: <$name>"
 }
-
-class EmptyNode(override val meta: MetaData) : Node {
-	override fun eval() = null
-	override fun toString() = "null"
-}
-

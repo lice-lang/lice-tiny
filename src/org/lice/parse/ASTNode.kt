@@ -40,7 +40,7 @@ class ASTListNode(lParthMetaData: MetaData, private val subNodes: ArrayList<ASTN
 			val mappedNodes = (1 until subNodes.size).map { subNodes[it].accept(sema) }
 			ExpressionNode(mapFirstResult, metaData, mappedNodes)
 		}
-	} else EmptyNode(metaData)
+	} else ValueNode(null, metaData)
 }
 
 class Sema @JvmOverloads constructor(var symbolList: SymbolList = SymbolList())
