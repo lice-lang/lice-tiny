@@ -25,11 +25,13 @@ object Parser {
 		l.nextToken()
 		val leftParthToken = l.currentToken()
 		val subNodes = ArrayList<ASTNode>()
-		while (!(l.currentToken().type == Token.TokenType.LispKwd && l.currentToken().strValue == ")")) {
+		while (!(l.currentToken().type == Token.TokenType.LispKwd
+							&& l.currentToken().strValue == ")")
+						&& l.currentToken().type != Token.TokenType.EOI) {
 			subNodes.add(parseNode(l))
-			if (l.currentToken().type == Token.TokenType.EOI)
-				throw ParseException("Unexpected EOI, expected ')'", l.currentToken().metaData)
 		}
+		if (l.currentToken().type == Token.TokenType.EOI)
+			throw ParseException("Unexpected EOI, expected ')'", l.currentToken().metaData)
 
 		l.nextToken()
 		return ASTListNode(leftParthToken.metaData, subNodes)
