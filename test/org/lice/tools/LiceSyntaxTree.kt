@@ -1,14 +1,8 @@
 package org.lice.tools
 
-import org.lice.model.*
-import org.lice.parse.buildNode
-import java.awt.BorderLayout
-import java.awt.Dimension
-import java.io.File
-import javax.swing.*
-import javax.swing.tree.DefaultMutableTreeNode
-
 object LiceSyntaxTree {
+	/// @todo switch to ASTNodes.
+	/*
 	private fun mapAst2Display(node: StringNode, viewRoot: DefaultMutableTreeNode): DefaultMutableTreeNode = when (node) {
 		is StringLeafNode -> DefaultMutableTreeNode(node)
 		is StringMiddleNode -> viewRoot.apply {
@@ -63,9 +57,10 @@ object LiceSyntaxTree {
 		frame.pack()
 		frame.isVisible = true
 	}
+	*/
 
 	@JvmStatic
 	fun main(args: Array<String>) {
-		displaySemanticTree(File("./sample/test3.lice"))
+		// displaySemanticTree(File("./sample/test3.lice"))
 	}
 }
