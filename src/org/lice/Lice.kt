@@ -7,9 +7,7 @@
 package org.lice
 
 import org.lice.core.SymbolList
-import org.lice.parse2.Lexer
-import org.lice.parse2.Parser
-import org.lice.parse2.Sema
+import org.lice.parse2.*
 import org.lice.repl.Main
 import org.lice.util.InterpretException
 import org.lice.util.ParseException
@@ -18,19 +16,17 @@ import java.io.File
 object Lice {
 	@JvmOverloads
 	@JvmStatic
-	fun run(file: File) =
-			Main.interpret(file)
+	fun run(file: File, symbolList: SymbolList = SymbolList()) =
+			Main.interpret(file, symbolList)
 
 	@JvmOverloads
 	@JvmStatic
 	fun run(code: String, symbolList: SymbolList = SymbolList()): Any? {
 		try {
 			return Parser.parseTokenStream(Lexer(code)).accept(Sema(symbolList)).eval()
-		}
-		catch (e: ParseException) {
+		} catch (e: ParseException) {
 			e.prettyPrint(code.split("\n"))
-		}
-		catch (e: InterpretException) {
+		} catch (e: InterpretException) {
 			e.prettyPrint(code.split("\n"))
 		}
 		return null

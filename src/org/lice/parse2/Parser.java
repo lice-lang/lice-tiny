@@ -1,6 +1,5 @@
 package org.lice.parse2;
 
-import org.lice.model.MetaData;
 import org.lice.util.ParseException;
 
 import java.util.ArrayList;
