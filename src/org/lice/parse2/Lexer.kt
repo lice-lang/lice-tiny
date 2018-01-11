@@ -146,9 +146,7 @@ class Lexer(sourceCode: String) {
 		if (currentChar() !in tokenDelimiters) throw ParseException("Unexpected character ${currentChar()}",
 				MetaData(this.line, this.line, this.col, this.col + 1))
 
-		if (isNegative) {
-			numberStr = "-${numberStr}"
-		}
+		if (isNegative) numberStr = "-$numberStr"
 		tokenBuffer.add(Token(numberType, numberStr, line, this.line, startAtCol, this.col))
 	}
 
