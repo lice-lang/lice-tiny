@@ -178,9 +178,12 @@ class Lexer(sourceCode: String) {
 				nextChar()
 			} else {
 				when (peekOneChar()) {
+					'0' -> builder.append('\u0000')
 					'n' -> builder.append('\n')
 					'f' -> builder.append('\u000C')
 					't' -> builder.append('\t')
+					'v' -> builder.append('\u000B')
+					'r' -> builder.append('\u000D')
 					'\\' -> builder.append('\\')
 					'"' -> builder.append('\"')
 					else -> throw ParseException("Illegal conversion sequence \\${peekOneChar()}",
