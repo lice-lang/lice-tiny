@@ -222,7 +222,7 @@ class Lexer(sourceCode: String) {
 		private const val binDigits = "01"
 		private const val octDigits = "01234567"
 		private const val decDigits = "0123456789"
-		private const val hexDigits = "0123456789ABCDEF"
+		private const val hexDigits = "0123456789ABCDEFabcdef"
 		private const val blanks = " \u000C\n\t\r,"
 		private const val lispSymbols = "()"
 		private const val tokenDelimiters = blanks + lispSymbols + ";\u0000"
