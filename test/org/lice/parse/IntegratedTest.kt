@@ -4,7 +4,7 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 class IntegratedTest {
-	@Test(timeout = 500)
+	@Test
 	fun Test1() {
 		val srcCode = """
 (def fibonacci n
@@ -24,7 +24,7 @@ class IntegratedTest {
 		Parser.parseTokenStream(Lexer(srcCode)).accept(Sema()).eval()
 	}
 
-	@Test(timeout = 500)
+	@Test
 	fun Test2() {
 		val srcCode = """
 (print (+ 1 1) "\n")
@@ -50,7 +50,7 @@ class IntegratedTest {
 		Parser.parseTokenStream(Lexer(srcCode)).accept(Sema()).eval()
 	}
 
-	@Test(timeout = 500)
+	@Test
 	fun Test3() {
 		/// Intentionally empty translation unit
 		val srcCode = """
@@ -58,7 +58,7 @@ class IntegratedTest {
 		Parser.parseTokenStream(Lexer(srcCode)).accept(Sema()).eval()
 	}
 
-	@Test(timeout = 500)
+	@Test
 	fun Test4() {
 		val srcCode = """
 ; defining functions
@@ -117,7 +117,7 @@ class IntegratedTest {
 		Parser.parseTokenStream(Lexer(srcCode)).accept(Sema()).eval()
 	}
 
-	@Test(timeout = 500)
+	@Test
 	fun Test5() {
 		assertEquals(233, Parser.parseTokenStream(Lexer("233")).accept(Sema()).eval())
 		assertEquals(0x233, Parser.parseTokenStream(Lexer("0x233")).accept(Sema()).eval())

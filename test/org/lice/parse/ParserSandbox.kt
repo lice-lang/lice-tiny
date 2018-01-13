@@ -3,7 +3,7 @@ package org.lice.parse
 import org.junit.Test
 
 class ParserSandbox {
-	@Test(timeout = 1000)
+	@Test
 	fun run() {
 		val srcCode = """
 (def fibonacci n
