@@ -20,7 +20,9 @@ private fun exceptionPrettyPrint(string: String, meta: MetaData, cachedCodeLines
 		System.err.print(":" + meta.beginIndex)
 	}
 	System.err.println(": " + string)
-	System.err.println(cachedCodeLines[meta.beginLine-1])
+	if (meta.beginLine != -1) {
+		System.err.println(cachedCodeLines[meta.beginLine - 1])
+	}
 	if (meta.beginIndex != -1) {
 		for (i: Int in meta.beginIndex.downTo(2))
 			System.err.print(' ')
