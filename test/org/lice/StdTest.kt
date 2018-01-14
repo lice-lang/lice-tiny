@@ -80,10 +80,12 @@ class StdTest {
 
 	@Test(timeout = 1000)
 	fun test7() {
+		//language=Lice
 		"""
 (extern "java.util.Objects" "equals")
 (equals 1 1)
 """ evalTo true
+		//language=Lice
 		"""
 (extern "java.util.Objects" "equals")
 (equals 1 2)
