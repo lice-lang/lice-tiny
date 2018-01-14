@@ -136,6 +136,12 @@ class IntegratedTest {
 		assertFails { Lice.runBarely("0b2") }
 		assertFails { Lice.runBarely("0o9") }
 		assertFails { Lice.runBarely("undefined-variable") }
+		assertFails { Lice.runBarely("(+ (->str 1))") }
+		assertFails { Lice.runBarely("(def)") }
+		assertFails { Lice.runBarely("(def name)") }
+		assertFails { Lice.runBarely("(-> name)") }
+		assertFails { Lice.runBarely("(; 1)") }
+		assertFails { Lice.runBarely(""""\g"""") }
 		assertFails { Lice.runBarely("(") }
 		assertFails { Lice.runBarely(")") }
 		assertFails { Lice.runBarely("\"") }
